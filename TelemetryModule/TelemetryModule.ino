@@ -16,14 +16,6 @@
 #include <Adafruit_GPS.h>
 #include <Adafruit_BNO055.h>
 
-#define MAX_BUFFER 256
-uint8_t decoded_buffer[MAX_BUFFER];
-
-enum State {WAIT, ARM, RUN, READY, SHUTDOWN, ERR};
-State state = WAIT;
-
-char c, d;
-
 /* ---------- Sensors ---------- */
 
 // BMP280
@@ -48,12 +40,11 @@ Adafruit_GPS GPS(&Serial3);
 
 /* ---------- Variables ---------- */
 
-bool b_useSerial = false;
-bool b_useXbee = false;
+bool b_useSerial; bool b_useXbee;
 
-bool b_testResult = false;
-bool b_xbeeResult = false;
-bool b_sdResult = false;
+bool b_testResult; bool b_xbeeResult; bool b_sdResult; bool b_GPSResult;
+
+bool b_usebmp; bool b_useccs; bool b_usebaro; bool b_usebno;
 
 char c, d;
 
@@ -72,21 +63,19 @@ const uint16_t ADAGPS_BAUD = 9600;
 //Logfile
 File logfile;
 
-//Timers
-uint32_t START_TIME, START_TIME_GPS;
-SoftTimer timerGPS;
-SoftTimer timerBME;
-SoftTimer timerBNO;
-SoftTimer timerCCS;
-SoftTimer timeoutINIT;
-
 //Buffer
 #define MAX_BUFFER 256
 uint8_t decoded_buffer[MAX_BUFFER];
 
+//Timers
+uint32_t START_TIME, START_TIME_GPS;
+SoftTimer timeoutINIT;
+
 //States
 enum State {WAIT, ARM, RUN, READY, SHUTDOWN, ERR};
 State state = WAIT;
+
+
 
 //Master Functions
 void initAll() {
