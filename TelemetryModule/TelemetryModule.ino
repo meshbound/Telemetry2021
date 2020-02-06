@@ -154,124 +154,115 @@ uint32_t getTime() {
 }
 
 
-//Master Functions
-void initAll() {
-  Serial1.begin(XBEE_BAUD);
+/* ---------- Sensor methods ---------- */
 
-  pinMode(BUZZER_PIN, OUTPUT);
+// BMP280
+boolean init_bmp(){
+  if (!bmp.begin()){
 
-  while (!Serial) {
-    /*Wait for Serial to connect*/
-  };
-  while (!Serial1) {
-    
-    /*Wait for XBee Serial to connect*/
-  };
-  while (!Serial3) {
-    /* Wait for GPS Serial to connect*/
-  }
-
-  Serial1 << endl << "# Initializing" << endl;
-
-  initSD ();
-  Serial1 << "# SD Initialized" << endl;
-
-  initGPS();
-  Serial1 << "# GPS Initialized" << endl;
-
-  initBNO();
-  Serial1 << "# BNO Initialized" << endl;
-
-  initBME();
-  Serial1 << "# BME Initialized" << endl;
-
-  initCCS();
-  Serial1 << "# CCS Initialized" << endl;
-}
-
-// SD Stuff
-void initSD() {
-  if (!SD.begin(SELECT_SLVE)) {
-    return;
-  }
-
-  char filename[] = "FLIGHT00.CSV";
-  for (uint8_t i = 0; i < 100; i++) {
-    filename[6] = i / 10 + '0';
-    filename[7] = i % 10 + '0';
-    if (!SD.exists(filename)) {
-      logfile = SD.open(filename, FILE_WRITE);
-      break;
+    if (b_useSerial){
+      Serial << "# BMP280 failed to initalize" << endl;
     }
+    if (b_useXbee){
+      Serial1 << "# BMP280 failed to initalize" << endl;
+    }
+
+    return false;
   }
 
-  if (! logfile) {
-    return;
+  /* Default settings from datasheet. */
+  bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+                  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+
+  return true;
+}
+
+void request_bmp(uint16_t memSize = 100, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true){
+  char buffer[memSize];
+  PString dataBMP(buffer, sizeof(buffer));
+
+  sensors_event_t temp_event;
+  bmp_temp->getEvent(&temp_event);
+
+  dataBMP << "!!" << DELIMITER << getTimestamp() << DELIMITER << temp_event.temperature << endl;
+  write_to_locations(serialPrint,sdPrint,xbeePrint,dataBMP);
+}
+
+//CCS811
+boolean init_ccs(){
+  if (!ccs.begin()) {
+
+    if (b_useSerial) {
+      Serial << "# CCS811 failed to initalize" << endl;
+    }
+    if (b_useXbee) {
+      Serial1 << "# CCS811 failed to initalize" << endl;
+    }
+
+    return false;
   }
 
-  Serial1 << "# Logging to: " << filename << endl;
+  while (!ccs.available());
+  return true;
 }
 
-// GPS Stuff
-void initGPS() {
-  GPS.begin(ADAGPS_BAUD);
-  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
-  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
-  GPS.sendCommand(PGCMD_ANTENNA);
-
-  delay(1000);
-  Serial3.println(PMTK_Q_RELEASE);
-  timerGPS.setTimeOutTime(ADAGPS_INTR);
-}
-
-void prepareParseGPS(){
-   char g = GPS.read();
-   //Serial.write(g);
-   if (GPS.newNMEAreceived()) {
-     if (!GPS.parse(GPS.lastNMEA())) {
-        return;
-     }
-  }
-}
-
-PString readoutGPS(uint16_t memSize = 200, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
-  if (Serial3.available()) {
+void request_ccs(uint16_t memSize = 100, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
+  if (ccs.available()){
     char buffer[memSize];
-    PString dataGPS(buffer, sizeof(buffer));
-    dataGPS << "$$" << DELIMITER << getTimestamp() << DELIMITER << GPS.hour << DELIMITER << GPS.minute << DELIMITER << GPS.seconds << DELIMITER
-            << GPS.milliseconds << DELIMITER << GPS.day << DELIMITER << GPS.month << DELIMITER
-            << GPS.year << DELIMITER << (uint8_t)GPS.fix << DELIMITER << (uint8_t)GPS.fixquality << DELIMITER
-            << GPS.latitude << DELIMITER << (int32_t)GPS.lat << DELIMITER << GPS.longitude << DELIMITER
-            << (int32_t)GPS.lon << DELIMITER << GPS.speed << DELIMITER << GPS.angle << DELIMITER
-            << GPS.altitude << DELIMITER << GPS.satellites << endl;
+    PString dataCCS(buffer, sizeof(buffer));
 
-    if (serialPrint == true) {
-      Serial << dataGPS;
-    }
-
-    if (sdPrint == true) {
-      logfile << dataGPS;
-    }
-
-    if (xbeePrint == true) {
-      Serial1 << dataGPS;
-    }
-
-    return dataGPS;
+    dataCCS << "@@" << DELIMITER << getTimestamp()  << DELIMITER << ccs.geteCO2() << DELIMITER << ccs.getTVOC() << endl;
+    write_to_locations(serialPrint,sdPrint,xbeePrint,dataCCS);
   }
 }
 
-// Adafruit BNO055 Functions
-void initBNO() {
+//MPL3115A2
+boolean init_baro(){
+  if (!baro.begin()) {
+
+    if (b_useSerial) {
+      Serial << "# MPL3115A2 failed to initalize" << endl;
+    }
+    if (b_useXbee) {
+      Serial1 << "# MPL3115A2 failed to initalize" << endl;
+    }
+
+    return false;
+  }
+  
+  return true;
+}
+
+void request_baro(uint16_t memSize = 100, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
+  char buffer[memSize];
+  PString dataBARO(buffer, sizeof(buffer));
+
+  dataBARO << "##" << DELIMITER << baro.getPressure()  << DELIMITER << baro.getAltitude() << endl;
+  write_to_locations(serialPrint,sdPrint,xbeePrint,dataBARO);
+}
+
+//BNO055
+boolean init_bno(){
   if (!bno.begin()) {
-    return;
+
+    if (b_useSerial) {
+      Serial << "# BNO055 failed to initalize" << endl;
+    }
+    if (b_useXbee) {
+      Serial1 << "# BNO055 failed to initalize" << endl;
+    }
+    
+    return false;
   }
 
   bno.setExtCrystalUse(true);
-  timerBNO.setTimeOutTime(BNO055_INTR);
+  return true;
 }
 
-PString readoutBNO(uint16_t memSize = 210, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
+void request_bno(uint16_t memSize = 210, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
   char buffer[memSize];
   PString dataBNO(buffer, sizeof(buffer));
 
@@ -288,97 +279,107 @@ PString readoutBNO(uint16_t memSize = 210, bool serialPrint = false, bool sdPrin
   imu::Vector<3> accel = bno.getVector(Adafruit_BNO055::VECTOR_ACCELEROMETER);
   dataBNO << accel.x() << DELIMITER << accel.y() << DELIMITER << accel.z() << endl;
 
-  if (serialPrint == true) {
-    Serial << dataBNO;
-  }
-
-  if (sdPrint == true) {
-    logfile << dataBNO;
-  }
-
-  if (xbeePrint == true) {
-    Serial1 << dataBNO;
-  }
-
-  return dataBNO;
+  write_to_locations(serialPrint,sdPrint,xbeePrint,dataBNO);
 }
 
-//Sparkfun BME280 Functions
-void initBME() {
-  if (!atmoSense.beginI2C()) {
+//GPS
+void init_gps() {
+  
+  GPS.begin(ADAGPS_BAUD);
+  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
+  GPS.sendCommand(PGCMD_ANTENNA);
+
+  delay(1000);
+  // while (!Serial3) {}
+  Serial3.println(PMTK_Q_RELEASE);
+  
+  b_GPSResult = true;
+}
+
+void prepareParseGPS(){
+   char g = GPS.read();
+   //Serial.write(g);
+   if (GPS.newNMEAreceived()) {
+     if (!GPS.parse(GPS.lastNMEA())) {
+        return;
+     }
+  }
+}
+
+void request_gps(uint16_t memSize = 200, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
+  if (Serial3.available()) {
+    
+    char buffer[memSize];
+    PString dataGPS(buffer, sizeof(buffer));
+    
+    dataGPS << "$$" << DELIMITER << getTimestamp() << DELIMITER << GPS.hour << DELIMITER << GPS.minute << DELIMITER << GPS.seconds << DELIMITER
+            << GPS.milliseconds << DELIMITER << GPS.day << DELIMITER << GPS.month << DELIMITER
+            << GPS.year << DELIMITER << (uint8_t)GPS.fix << DELIMITER << (uint8_t)GPS.fixquality << DELIMITER
+            << GPS.latitude << DELIMITER << (int32_t)GPS.lat << DELIMITER << GPS.longitude << DELIMITER
+            << (int32_t)GPS.lon << DELIMITER << GPS.speed << DELIMITER << GPS.angle << DELIMITER
+            << GPS.altitude << DELIMITER << GPS.satellites << endl;
+
+    write_to_locations(serialPrint,sdPrint,xbeePrint,dataGPS);
+  }
+}
+
+//Xbee
+void init_xbee() {
+  Serial1.begin(XBEE_BAUD);
+
+  while (!Serial1) {
+    // Wait for the Xbee
+  }
+
+  b_useXbee = true;
+}
+
+//SD
+void init_sd() {
+  if (!SD.begin(SELECT_SLVE)) {
     return;
   }
-  atmoSense.settings.I2CAddress = BME280_ADDR;
-  atmoSense.settings.runMode = BME280_MODE; //Normal mode
-  atmoSense.settings.tStandby = BME280_STBY;
-  atmoSense.settings.filter = BME280_FITR;
-  atmoSense.settings.tempOverSample = BME280_TMPO;
-  atmoSense.settings.pressOverSample = BME280_PRSO;
-  atmoSense.settings.humidOverSample = BME280_HMDO;
 
-  delay(10);
-  atmoSense.begin();
-  timerBME.setTimeOutTime(BME280_INTR);
+  char filename[] = "FLIGHT00.CSV";
+  for (uint8_t i = 0; i < 100; i++) {
+    filename[6] = i / 10 + '0';
+    filename[7] = i % 10 + '0';
+    if (!SD.exists(filename)) {
+      logfile = SD.open(filename, FILE_WRITE);
+      break;
+    }
+  }
+
+  if (!logfile) {
+    return;
+  }
+
+  if (b_useSerial) {
+    Serial << "# Logging to: " << filename << endl;
+  }
+  if (b_useXbee) {
+    Serial1 << "# Logging to: " << filename << endl;
+  }
+
+  b_sdResult = true;
 }
 
-PString readoutBME(uint16_t memSize = 100, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
-  char buffer[memSize];
-  PString dataBME(buffer, sizeof(buffer));
 
-  dataBME << "!!" << DELIMITER << getTimestamp() << DELIMITER
-          << atmoSense.readTempC() << DELIMITER
-          << atmoSense.readFloatPressure() << DELIMITER
-          << atmoSense.readFloatAltitudeMeters() << DELIMITER
-          << atmoSense.readFloatHumidity() << endl;
-
+void write_to_locations(bool serialPrint, bool sdPrint, bool xbeePrint, PString data){
   if (serialPrint == true) {
-    Serial << dataBME;
-  }
-
-  if (sdPrint == true) {
-    logfile << dataBME;
-  }
-
-  if (xbeePrint == true) {
-    Serial1 << dataBME;
-  }
-
-  return dataBME;
-}
-
-//Sparkfun CCS811 Functions
-void initCCS() {
-  CCS811Core::status returnCode = airqSense.begin();
-  if (!returnCode == CCS811Core::SENSOR_SUCCESS) {
-  }
-  timerCCS.setTimeOutTime(CCS811_INTR);
-}
-
-PString readoutCCS(uint16_t memSize = 100, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
-  if (airqSense.dataAvailable()) {
-    char buffer[memSize];
-    PString dataCCS(buffer, sizeof(buffer));
-
-    airqSense.readAlgorithmResults();
-    airqSense.setEnvironmentalData(atmoSense.readFloatHumidity(), atmoSense.readTempC());
-
-    dataCCS << "@@" << DELIMITER << getTimestamp()  << DELIMITER << airqSense.getCO2() << DELIMITER << airqSense.getTVOC() << endl;
-
-    if (serialPrint == true) {
-      Serial << dataCCS;
+      Serial << data;
     }
 
     if (sdPrint == true) {
-      logfile << dataCCS;
+      logfile << data;
     }
 
     if (xbeePrint == true) {
-      Serial1 << dataCCS;
+      Serial1 << data;
     }
-
-    return dataCCS;
-  }
 }
+
 
 void runSensors() {
 
