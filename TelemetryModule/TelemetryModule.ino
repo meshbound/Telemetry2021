@@ -75,6 +75,7 @@ SoftTimer timeoutINIT;
 enum State {WAIT, ARM, RUN, READY, SHUTDOWN, ERR};
 State state = WAIT;
 
+
 /* ---------- Debug methods ---------- */
 
 bool init_sensors(){
@@ -152,7 +153,6 @@ uint32_t getTime() {
   Serial1 << "# Date (mm/dd/yyyy): " << month() << "/" << day() << "/" << year() << endl;
   return ((hours * 3600000) + (minutes * 60000) + (seconds * 1000) + milliseconds);
 }
-
 
 /* ---------- Sensor methods ---------- */
 
@@ -380,28 +380,54 @@ void write_to_locations(bool serialPrint, bool sdPrint, bool xbeePrint, PString 
     }
 }
 
+/* ---------- Main methods ---------- */
 
-void runSensors() {
+void init_all() {
+  
+  init_serial();
+  init_xbee();
+  init_sd();
+  init_gps();
+  init_sensors();
 
-  if (timerGPS.hasTimedOut()) {
-    readoutGPS();
-    timerGPS.reset();
+  if(b_useSerial){
+    Serial << "# Sensors init exited with " + String(b_testResult) << endl;
+    Serial << "# Xbee init exited with " + String(b_xbeeResult) << endl;
+    Serial << "# SD init exited with " + String(b_sdResult) << endl;
+    Serial << "# GPS init exited with " + String(b_GPSResult) << endl;
   }
-
-  if (timerBNO.hasTimedOut()) {
-    readoutBNO();
-    timerBNO.reset();
+  if(b_useXbee){
+    Serial1 << "# Sensors init exited with " + String(b_testResult) << endl;
+    Serial1 << "# Xbee init exited with " + String( b_xbeeResult) << endl;
+    Serial1 << "# SD init exited with " + String(b_sdResult) << endl;
+    Serial1 << "# GPS init exited with " + String(b_GPSResult) << endl;
   }
+}
 
-  if (timerBME.hasTimedOut()) {
-    readoutBME();
-    timerBME.reset();
-  }
+void read_all_data(){
+   if(b_GPSResult){
+    request_gps();
+   }
 
-  if (timerCCS.hasTimedOut()) {
-    readoutCCS();
-    timerCCS.reset();
-  }
+   if(b_usebmp){
+    request_bmp();
+   }
+
+   if(b_useccs){
+    request_ccs();
+   }
+
+   if(b_usebaro){
+    request_baro();
+   }
+
+   if(b_usebno){
+    request_bno();
+   }
+}
+
+void setup() {
+  init_all();
 }
 
 void runWait() {
@@ -483,7 +509,11 @@ State nextState(State state) {
         break;
       }
       else if (d == 's'){
-        Serial1.println("# STARTUP RECEIVED");
+
+        if(b_useXbee){
+          Serial1.println("# STARTUP RECEIVED");
+        }
+        
         nextstate = RUN;
         break;
       }
@@ -508,24 +538,26 @@ State nextState(State state) {
   return nextstate;
 }
 
-void setup() {
-  initAll();
-}
-
 void loop() {
+
   switch (state){
     case WAIT:
       runWait();
-      //Serial.println("WAIT");
+      if(b_useSerial){
+        Serial.println("WAIT");
+      }
       break;
     case READY:
-      //Serial.println("READY");
+      if(b_useSerial){
+        Serial.println("READY");
+      }
       break;
     case RUN:
-      //Serial.println("RUN");
-      runSensors();
+      if(b_useSerial){
+        Serial.println("RUN");
+      }
+      read_all_data();
       break;
   }
   state = nextState(state);
-  //state = WAIT;
- }
+}
