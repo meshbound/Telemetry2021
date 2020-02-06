@@ -75,6 +75,83 @@ SoftTimer timeoutINIT;
 enum State {WAIT, ARM, RUN, READY, SHUTDOWN, ERR};
 State state = WAIT;
 
+/* ---------- Debug methods ---------- */
+
+bool init_sensors(){
+
+  b_usebmp = init_bmp();
+  b_useccs = init_ccs();
+  b_usebaro = init_baro();
+  b_usebno = init_bno();
+  
+  bool test = b_usebmp && b_useccs && b_usebaro && b_usebno;
+  b_testResult = test;
+
+  return test;
+}
+
+void init_serial(){
+  Serial.begin(9600);
+  b_useSerial = true;
+}
+
+/* ---------- Time ---------- */
+
+void init_time() {
+  START_TIME = millis();
+  START_TIME_GPS = getTime();
+
+  if(b_useXbee){
+    Serial1 << "# Initialized GPS Time (ms): " << START_TIME_GPS << endl;
+    Serial1 << "# Initialized Millis Start Time (ms): " << START_TIME << endl;
+    Serial1 << "# Initalization Time (ms): " << millis() << endl;
+  }
+  
+}
+
+PString getTimestamp(uint16_t memSize = 50, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
+  uint32_t elapsedTime = millis() - START_TIME;
+  uint32_t inputMillis = elapsedTime + START_TIME_GPS;
+
+  uint16_t hours = inputMillis / 3600000;
+  inputMillis -= (3600000 * hours);
+
+  uint8_t minutes = inputMillis / 60000;
+  inputMillis -= (60000 * minutes);
+
+  uint8_t seconds = inputMillis / 1000;
+  inputMillis -= (1000 * seconds);
+
+  char buffer[memSize];
+  PString dataTime(buffer, sizeof(buffer));
+
+  dataTime << hours << ":" << minutes << ":" << seconds << "."
+           << inputMillis << DELIMITER << elapsedTime;
+
+  return dataTime;
+}
+
+uint32_t getTime() {
+  prepareParseGPS();
+  uint16_t milliseconds = GPS.milliseconds;
+  uint8_t days = GPS.day;
+  uint8_t seconds = GPS.seconds;
+  uint8_t minutes = GPS.minute;
+  int8_t hours = GPS.hour + OFFSET_TIME;
+
+  if (hours < 0) {
+    hours = 24 + hours;
+    days -= 1;
+  }
+  if (hours > 23) {
+    hours = 24 - hours;
+    days += 1;
+  }
+
+  setTime(hours, minutes, seconds, days, GPS.month, GPS.year + 2000);
+  Serial1 << "# Date (mm/dd/yyyy): " << month() << "/" << day() << "/" << year() << endl;
+  return ((hours * 3600000) + (minutes * 60000) + (seconds * 1000) + milliseconds);
+}
 
 
 //Master Functions
@@ -133,65 +210,6 @@ void initSD() {
   }
 
   Serial1 << "# Logging to: " << filename << endl;
-}
-
-// Time Stuff
-void initTime() {
-  START_TIME = millis();
-  START_TIME_GPS = getTime();
-
-  Serial1 << "# Initialized GPS Time (ms): " << START_TIME_GPS << endl;
-  Serial1 << "# Initialized Millis Start Time (ms): " << START_TIME << endl;
-  Serial1 << "# Initalization Time (ms): " << millis() << endl;
-
-  timerGPS.reset();
-  timerBME.reset();
-  timerBNO.reset();
-  timerCCS.reset();
-}
-
-PString getTimestamp(uint16_t memSize = 50, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
-  uint32_t elapsedTime = millis() - START_TIME;
-  uint32_t inputMillis = elapsedTime + START_TIME_GPS;
-
-  uint16_t hours = inputMillis / 3600000;
-  inputMillis -= (3600000 * hours);
-
-  uint8_t minutes = inputMillis / 60000;
-  inputMillis -= (60000 * minutes);
-
-  uint8_t seconds = inputMillis / 1000;
-  inputMillis -= (1000 * seconds);
-
-  char buffer[memSize];
-  PString dataTime(buffer, sizeof(buffer));
-
-  dataTime << hours << ":" << minutes << ":" << seconds << "."
-           << inputMillis << DELIMITER << elapsedTime;
-
-  return dataTime;
-}
-
-uint32_t getTime() {
-  prepareParseGPS();
-  uint16_t milliseconds = GPS.milliseconds;
-  uint8_t days = GPS.day;
-  uint8_t seconds = GPS.seconds;
-  uint8_t minutes = GPS.minute;
-  int8_t hours = GPS.hour + OFFSET_TIME;
-
-  if (hours < 0) {
-    hours = 24 + hours;
-    days -= 1;
-  }
-  if (hours > 23) {
-    hours = 24 - hours;
-    days += 1;
-  }
-
-  setTime(hours, minutes, seconds, days, GPS.month, GPS.year + 2000);
-  Serial1 << "# Date (mm/dd/yyyy): " << month() << "/" << day() << "/" << year() << endl;
-  return ((hours * 3600000) + (minutes * 60000) + (seconds * 1000) + milliseconds);
 }
 
 // GPS Stuff
