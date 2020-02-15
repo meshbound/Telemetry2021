@@ -110,7 +110,7 @@ void init_time() {
   
 }
 
-PString getTimestamp(uint16_t memSize = 50, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
+PString getTimestamp(uint16_t memSize = 50, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true) {
   uint32_t elapsedTime = millis() - START_TIME;
   uint32_t inputMillis = elapsedTime + START_TIME_GPS;
 
@@ -180,7 +180,7 @@ boolean init_bmp(){
   return true;
 }
 
-void request_bmp(uint16_t memSize = 100, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true){
+void request_bmp(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true){
   char buffer[memSize];
   PString dataBMP(buffer, sizeof(buffer));
 
@@ -209,7 +209,7 @@ boolean init_ccs(){
   return true;
 }
 
-void request_ccs(uint16_t memSize = 100, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
+void request_ccs(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true) {
   if (ccs.available()){
     char buffer[memSize];
     PString dataCCS(buffer, sizeof(buffer));
@@ -236,7 +236,7 @@ boolean init_baro(){
   return true;
 }
 
-void request_baro(uint16_t memSize = 100, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
+void request_baro(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true) {
   char buffer[memSize];
   PString dataBARO(buffer, sizeof(buffer));
 
@@ -262,7 +262,7 @@ boolean init_bno(){
   return true;
 }
 
-void request_bno(uint16_t memSize = 210, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
+void request_bno(uint16_t memSize = 210, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true) {
   char buffer[memSize];
   PString dataBNO(buffer, sizeof(buffer));
 
@@ -307,7 +307,7 @@ void prepareParseGPS(){
   }
 }
 
-void request_gps(uint16_t memSize = 200, bool serialPrint = false, bool sdPrint = true, bool xbeePrint = true) {
+void request_gps(uint16_t memSize = 200, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true) {
   if (Serial3.available()) {
     
     char buffer[memSize];
@@ -539,7 +539,7 @@ State nextState(State state) {
 }
 
 void loop() {
-
+  /*
   switch (state){
     case WAIT:
       runWait();
@@ -560,4 +560,6 @@ void loop() {
       break;
   }
   state = nextState(state);
+  */
+  read_all_data();
 }
