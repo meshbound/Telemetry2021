@@ -2,40 +2,28 @@ import serial
 import csv
 import time 
 import os
+import json
+from datetime import datetime
 
 SERIAL_PORT = "COM3"
 BAUD_RATE = 9600
 
-ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
-path = "C:/Users/jackc/OneDrive/Documents/GitHub/Telemetry2020/GroundControl/Data/"
+#ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
+path = "./Data/"
+dump = "{}Dump.csv".format(path+datetime.date()+"-")
 
 ser.write(str.encode("-")) # "-" skips the fix for the GPS
 time.sleep(1)
 ser.write(str.encode("+")) # telemetry module will not transmit data until "+" is sent
 
 try:
-    os.remove("{}imu.csv".format(path))
-except:
-    pass
-
-try: 
-    os.remove("{}bme.csv".format(path))
-except:
-    pass
-
-try: 
-    os.remove("{}ccs.csv".format(path))
-except:
-    pass
-
-try: 
-    os.remove("{}baro.csv".format(path))
-except:
-    pass
+    os.remove("{}Dump.csv".format(path))
 
 while True:
     incoming = ser.readline().strip().decode("utf-8").split(",")
     tag = incoming[0]
+
+
 
     # IMU
     if tag == "%%":
