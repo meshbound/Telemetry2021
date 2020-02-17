@@ -405,9 +405,11 @@ void init_all() {
 }
 
 void read_all_data(){
+   /*
    if(b_GPSResult){
     request_gps();
    }
+   */
 
    if(b_usebmp){
     request_bmp();

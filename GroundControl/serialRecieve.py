@@ -1,54 +1,49 @@
 import serial
 import csv
-import time 
+import time
 import os
 import json
-from datetime import datetime
+import datetime
 
-SERIAL_PORT = "COM3"
+SERIAL_PORT = "COM4"
 BAUD_RATE = 9600
 
-#ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
-path = "./Data/"
-dump = "{}Dump.csv".format(path+datetime.date()+"-")
+# ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
+date = datetime.date.today()
 
-ser.write(str.encode("-")) # "-" skips the fix for the GPS
+path = "./Data/"
+dump_path = "{}Dump.csv".format(path + str(date) + "-")
+temp_path = "{}Current.json".format(path)
+
+ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
+
+ser.write(str.encode("-"))  # "-" skips the fix for the GPS
 time.sleep(1)
-ser.write(str.encode("+")) # telemetry module will not transmit data until "+" is sent
+ser.write(str.encode("+"))  # telemetry module will not transmit data until "+" is sent
+
+data_dict = {"!!": "", "@@": "", "##": "", "%%": "", "$$": ""}
 
 try:
-    os.remove("{}Dump.csv".format(path))
+    os.remove(dump_path)
+except:
+    pass
 
 while True:
-    incoming = ser.readline().strip().decode("utf-8").split(",")
-    tag = incoming[0]
+    incoming_raw = ser.readline().strip().decode("utf-8")
+    incoming_split = incoming_raw.split(",")
 
+    tag = incoming_split[0]
 
+    print(incoming_split)
 
-    # IMU
-    if tag == "%%":
-        with open('{}imu.csv'.format(path), 'a') as imuCSVFile:
-            writer = csv.writer(imuCSVFile)
-            writer.writerow(incoming)
-            imuCSVFile.close()
+    with open(dump_path, 'a') as dataDump:
+        writer = csv.writer(dataDump)
+        writer.writerow(incoming_split)
+        dataDump.close()
 
-    # BME
-    elif tag == "!!":
-        with open('{}bme.csv'.format(path), 'a') as bmeCSVFile:
-            writer = csv.writer(bmeCSVFile)
-            writer.writerow(incoming)
-            bmeCSVFile.close()
-    # CCSi
-    elif tag == "@@":
-        with open('{}ccs.csv'.format(path), 'a') as ccsCSVFile:
-            writer = csv.writer(ccsCSVFile)
-            writer.writerow(incoming)
-            ccsCSVFile.close()
-
-    elif tag == "##":
-        with open('{}baro.csv'.format(path), 'a') as baroCSVFile:
-            writer = csv.writer(baroCSVFile)
-            writer.writerow(incoming)
-            baroCSVFile.close()
+    with open(temp_path, 'w') as dataTemp:
+        if tag in data_dict:
+            data_dict[tag] = incoming_raw.replace(tag + ',', "")
+            json.dump(data_dict, dataTemp, default=json)
 
 ser.close()
