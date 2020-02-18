@@ -6,19 +6,11 @@ var values = {'quat_w':'0', 'quat_x':'0', 'quat_y':'0', 'quat_z':'0',
               'accel':'0', 'accel_x':'0', 'accel_y':'0', 'accel_z':'0',
               'Temperature':'0', 'Pressure':'0',
               'Altitude':'0', 'Humidity':'0',
-              'photodiode':'0',
               'GPS_fix':'0', 'latitude':'0', 'latitude_direction':'0', 'longitude':'0', 'longitude_direction':'0',
               'speed':'0', 'angle':'0', 'gps_alt':'0', 'satellites':'0'
              };
 
-// setup websocket with callbacks
-var ws = new ReconnectingWebSocket('ws://localhost:8080/');
-
-ws.onopen = function() {};
-
-ws.onclose = function() {};
-
-ws.onmessage = function(event) {
+function updateValues(clean_data){
   parsed = event.data.split(',');
 
   switch (parsed[0]) {
@@ -43,9 +35,6 @@ ws.onmessage = function(event) {
       values['Pressure'] = parsed[4];
       values['Altitude'] = parsed[5];
       values['Humidity'] = parsed[6];
-      break;
-    case "&&":
-      values['photodiode'] = parsed[3];
       break;
     case "$$":
       values['GPS_fix'] = parsed[10];
@@ -83,7 +72,6 @@ var ts_temp = new TimeSeries();
 var ts_humid = new TimeSeries();
 var ts_alt = new TimeSeries();
 var ts_pressure = new TimeSeries();
-var ts_photodiode = new TimeSeries();
 var ts_speed = new TimeSeries();
 var ts_angle = new TimeSeries();
 var ts_gps_alt = new TimeSeries();
@@ -214,18 +202,12 @@ var chart_gps = new SmoothieChart({tooltip: true, maxValueScale: 1.5, minValueSc
   chart_gps.addTimeSeries(ts_gps_alt, {lineWidth: 2, strokeStyle: '#80a062', tooltipLabel:'GPS Alt', tooltipUnit:' m'});
   chart_gps.addTimeSeries(ts_satellites, {lineWidth: 2, strokeStyle: '#ebcb8b', tooltipLabel:'Satillites', tooltipUnit:' m'});
 
-var chart_payload = new SmoothieChart({tooltip: true, maxValueScale: 1.5, minValueScale: 1.5, millisPerPixel: 11,
-  scaleSmoothing: 0.56, grid: {fillStyle: '#3b4253', strokeStyle: '#3b4253',verticalSections: 0},labels: {fillStyle: '#e5e9f0'}});
-
-  chart_payload.addTimeSeries(ts_photodiode, {lineWidth: 2, strokeStyle: '#c16069', tooltipLabel:'Photodiode', tooltipUnit:' mV'});
-
 chart_accel.streamTo($("#chart-accel")[0], 75);
 chart_gyro.streamTo($("#chart-gyro")[0], 75);
 chart_mag.streamTo($("#chart-mag")[0], 75);
 chart_env.streamTo($("#chart-env")[0], 75);
 chart_alt.streamTo($("#chart-alt")[0], 75);
 chart_gps.streamTo($("#chart-gps")[0], 75);
-chart_payload.streamTo($("#chart-payload")[0], 75);
 
 
 $(".smoothie-chart-canvas").each(function(){
@@ -274,7 +256,6 @@ $(".sensor-nav .nav-link").on("click", function(){
   ts_angle.disabled = nav_on['angle'];
   ts_gps_alt.disabled = nav_on['gps-alt'];
   ts_satellites.disabled = nav_on['satellite'];
-  ts_photodiode.disabled = nav_on['photodiode'];
 });
 
 var od_accelnet = new Odometer({el:$('div.odometer#odometer-net-acceleration')[0],value:0,format:'(,ddd).dd'});
@@ -296,8 +277,6 @@ var od_pressure = new Odometer({el:$('div.odometer#odometer-pressure')[0],value:
 var od_longitude = new Odometer({el:$('div.odometer#odometer-longitude')[0],value:0,format:'(,ddd).dd'});
 var od_latitude = new Odometer({el:$('div.odometer#odometer-latitude')[0],value:0,format:'(,ddd).dd'});
 
-var od_photodiode = new Odometer({el:$('div.odometer#odometer-photodiode')[0],value:0,format:'(,ddd).dd'});
-
 setInterval(function() {od_accelnet.update(values['accel']);}, 1000);
 setInterval(function() {od_gyrox.update(values['gyro_x']);}, 1000);
 setInterval(function() {od_gyroy.update(values['gyro_y']);}, 1000);
@@ -311,4 +290,3 @@ setInterval(function() {od_alt.update(values['Altitude']);}, 1000);
 setInterval(function() {od_pressure.update(values['Pressure']);}, 1000);
 setInterval(function() {od_longitude.update(values['longitude']);}, 1000);
 setInterval(function() {od_latitude.update(values['latitude']);}, 1000);
-setInterval(function() {od_photodiode.update(values['photodiode']);}, 1000);

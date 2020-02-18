@@ -12,8 +12,12 @@ BAUD_RATE = 9600
 date = datetime.date.today()
 
 path = "./Data/"
-dump_path = "{}Dump.csv".format(path + str(date) + "-")
+
+dump_path_temp = "{0}dump-({1}).csv"
+dump_path_finial = ""
 temp_path = "{}Current.json".format(path)
+
+start_dump = path + str(date) + "-"
 
 ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
 
@@ -23,10 +27,14 @@ ser.write(str.encode("+"))  # telemetry module will not transmit data until "+" 
 
 data_dict = {"!!": "", "@@": "", "##": "", "%%": "", "$$": ""}
 
-try:
-    os.remove(dump_path)
-except:
-    pass
+current = 0
+while True:
+    testName = dump_path_temp.format(start_dump, current)
+    if os.path.exists(testName):
+        current += 1
+    else:
+        dump_path_finial = testName
+        break;
 
 while True:
     incoming_raw = ser.readline().strip().decode("utf-8")
@@ -36,7 +44,7 @@ while True:
 
     print(incoming_split)
 
-    with open(dump_path, 'a') as dataDump:
+    with open(dump_path_finial, 'a') as dataDump:
         writer = csv.writer(dataDump)
         writer.writerow(incoming_split)
         dataDump.close()
@@ -45,5 +53,6 @@ while True:
         if tag in data_dict:
             data_dict[tag] = incoming_raw.replace(tag + ',', "")
             json.dump(data_dict, dataTemp, default=json)
+        dataTemp.close()
 
 ser.close()

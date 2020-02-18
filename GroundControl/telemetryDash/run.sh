@@ -5,7 +5,7 @@ function timestamp {
     return date.today()
 }
 
-LOGPATH = "./data/{}.txt".format(datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+#LOGPATH = "./data/{}.txt".format(datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
 
 #cd ./maps
 #sudo docker run --rm -v $(pwd):/data -p 8090:80 klokantech/openmaptiles-server &

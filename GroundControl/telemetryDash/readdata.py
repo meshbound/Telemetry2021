@@ -5,7 +5,7 @@ import sys
 from datetime import datetime
 import websockets
 
-filename = "./data/{}.txt".format(datetime.now().strftime("%Y-%m-%d_%H:%M:%S"))
+#filename = "./data/{}.txt".format(datetime.now().strftime("%Y-%m-%d_%H:%M:%S"))
 uri = 'ws://localhost:8080/'
 
 SERIALPORT = "COM3"
