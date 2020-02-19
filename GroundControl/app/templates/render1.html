@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <!-- Setup -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Telemetry Dashboard</title>
+  <!-- Information -->
+  <meta name="author" content="MWR_Telemetry: Hyun-seok, Benton, Nicholas, Daniel">
+  <meta name="description" content="Telemetry dashboard">
+  <meta name="keywords" content="telemetry, rockets, west high school, madison west rocket club">
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="./dependancies/assets/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./dependancies/assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./dependancies/assets/favicon/favicon-16x16.png">
+  <link rel="manifest" href=".dependancies/assets/favicon/site.webmanifest">
+  <link rel="mask-icon" href=".dependancies/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href=".dependancies/assets/favicon/favicon.ico">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-config" content=".dependancies/assets/favicon/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Dependencies-->
+  <script src="./dependancies/js/WebGL.js"></script>
+  <script src="./dependancies/js/three.min.js"></script>
+
+
+  <link rel="stylesheet" href="./dependancies/css/leaflet.css">
+  <script src="./dependancies/js/leaflet.js"></script>
+
+  <!-- JQuery -->
+  <script type="text/javascript" src="./dependancies/bootstrap/jquery-3.3.1.slim.min.js"></script>
+
+  <!-- Websockets -->
+  <script type="text/javascript" src="./dependancies/js/reconnecting-websocket.min.js"></script>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="./dependancies/bootstrap/css/bootstrap.min.css">
+  <script type="text/javascript" src="./dependancies/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="./dependancies/bootstrap/popper.min.js"></script>
+  <script type="text/javascript" src="./dependancies/js/jquery.fittext.js"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="./dependancies/css/fontawesome.min.css">
+
+  <!-- CSS Main Style -->
+  <link rel="stylesheet" href="index.css">
+  <style media="screen">
+  </style>
+</head>
+
+<body>
+  <!-- The Actual Body -->
+  <header class="navbar navbar-bright fixed-top navbar-expand-md" role="banner">
+    <div class="container">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle
+          navigation
+        </span>
+        &#x2630;</button> <a href="/" class="navbar-brand">MWR</a>
+      <nav class="collapse navbar-collapse" role="navigation">
+        <ul class="nav navbar-nav ml-auto">
+          <li class="nav-item">
+            <a href="#" class="nav-link"><i class="fas fa-chart-area"></i> Graph</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link"><i class="fas fa-cubes"></i> Render</a>
+          </li>
+          <li class="active nav-item">
+            <a href="#" class="nav-link"><i class="fas fa-code"></i> Log</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link"><i class="fas fa-info-circle"></i> About</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link"><i class="fab fa-github"></i> Source</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+      <!-- altitude-->
+      <div align="center">
+         TODO: Altitude
+        </div>
+    </div>
+    <div class="col-md-3">
+    </div>
+  </div>
+
+  <footer>
+    <div class="row">
+      <div class="col-md-3">
+        <div id="map" align="center"></div>
+      </div>
+      <div class="col-md-6">
+        <!-- altitude-->
+        <div id="navball" align="center" style=20%></div>
+      </div>
+      <div class="col-md-3">
+      </div>
+    </div>
+  </footer
+
+
+  <div class="container-fluid">
+    <div id="navball"></div>
+  </div>
+  <!-- Main JS -->
+  <script async type="text/javascript" src="render.js"></script>
+</body>
+
+</html>

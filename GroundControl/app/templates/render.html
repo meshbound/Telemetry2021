@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Setup -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Telemetry Dashboard</title>
+  <!-- Information -->
+  <meta name="author" content="MWR_Telemetry: Hyun-seok, Benton, Nicholas, Daniel">
+  <meta name="description" content="Telemetry dashboard">
+  <meta name="keywords" content="telemetry, rockets, west high school, madison west rocket club">
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="./dependancies/assets/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./dependancies/assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./dependancies/assets/favicon/favicon-16x16.png">
+  <link rel="manifest" href=".dependancies/assets/favicon/site.webmanifest">
+  <link rel="mask-icon" href=".dependancies/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href=".dependancies/assets/favicon/favicon.ico">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-config" content=".dependancies/assets/favicon/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Init CSS -->
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=font1|font2|etc" type="text/css">
+  <link rel="stylesheet" href="./dependancies/css/leaflet.css"/>
+  <link rel="stylesheet" type="text/css" href="dependancies/css/epoch.css">
+  <link rel="stylesheet" type="text/css" href="./dependancies/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="Style.css" type="text/css">
+  <link rel="stylesheet" href="index.css" type="text/css">
+  <link rel="stylesheet" href="./dependancies/css/fontawesome.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet'>
+
+  <!-- Javascript Init Prerequisites -->
+  <script type="text/javascript" src="./dependancies/js/reconnecting-websocket.min.js"></script>
+  <script type="text/javascript" src="./dependancies/js/three.min.js"></script>
+  <script type="text/javascript" src="./dependancies/js/OrbitControls.js"></script>
+  <script type="text/javascript" src="./dependancies/js/WebGL.js"></script>
+  <script type="text/javascript" src="./dependancies/js/TextGeometry.js"></script>
+  <script type="text/javascript" src="./dependancies/js/OBJLoader.js"></script>
+  <script type="text/javascript" src="./dependancies/js/MTLLoader.js"></script>
+  <script type="text/javascript" src="./dependancies/js/smoothie.js"></script>
+  <script type="text/javascript" src="./dependancies/js/leaflet.js"></script>
+  <link rel="stylesheet" href="./dependancies/css/odometer.css" />
+  <script src="./dependancies/js/odometer.min.js"></script>
+
+  <script type="text/javascript" src="./dependancies/bootstrap/jquery-3.3.1.slim.min.js"></script>
+  <script type="text/javascript" src="./dependancies/js/d3.v3.min.js" charset="utf-8"></script>
+  <script type="text/javascript" src="./dependancies/js/epoch.js"></script>
+  <script type="text/javascript" src="./dependancies/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="./dependancies/bootstrap/popper.min.js"></script>
+</head>
+<h2 style="padding-left: 10px;">MADISON WEST ROCKETRY: TELEMETRY DASH.</h2>
+<body>
+  <script type="text/javascript" src="datacollection.js"></script>
+  <div class="3dDisplay" id="board_render"></div>
+  <div class="container-fluid" style="z-index: 1;">
+  <div class="row h-75">
+
+    <!--Left Block-->
+    <div class="col-md-4 pl-4">
+<div style="background: #353c4b;">
+      <!-- temp graph -->
+      <div class="row mx-3">
+        <div class="col-md-12">
+          <p style="padding-top: 10px;">Temperature:</p>
+          <div class="chart" id="graph_temp">
+            <canvas class="smoothie-chart" id="chart-temp"  width="500" height="20vh"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- humidity graph-->
+      <div class="row mx-3">
+        <div class="col-md-12">
+          <p>Humidity:</p>
+          <div class="chart" id="graph_humid">
+            <canvas class="smoothie-chart" id="chart-humid" width="500" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- pressure graph-->
+      <div class="row mx-3 mb-5">
+        <div class="col-md-12 ">
+          <p>Pressure:</p>
+          <div class="chart" id="graph_pressure">
+            <canvas class="smoothie-chart" id="chart-pressure"  width="500" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+      <br>
+</div>
+<br>
+      <!---Gauges-->
+      <div style="background: #353c4b;">
+        <p style="padding-left: 35px; padding-top: 10px;""> Acceleration {x,y,z}</p>
+        <div class="row mx-3 pb-3">
+          <div class="col md-4">
+            <div id="gauge_accelx" class="epoch gauge-tiny"></div>
+          </div>
+          <div class="col md-4">
+              <div id="gauge_accely" class="epoch gauge-tiny"></div>
+          </div>
+          <div class="col md-4">
+              <div id="gauge_accelz" class="epoch gauge-tiny"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Middle Block-->
+    <div class="col-md-4" id="mainCol">
+
+      <!--Altitude-->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="alt-descriptor" align="center">
+
+            <h3 style=" color: #c16069">Altitude: </h3>
+           <div id="altitude"><div id="altitude_od" style="color: #e5e9f0"></div></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!--Navball-->
+      <div class="row">
+        <div class="col-md-12 mx-auto">
+          <div id="navball-div fixed-bottom">
+          <div id="navball" class="fixed-bottom text-center"></div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Right Block-->
+    <div class="col-md-4 pr-4">
+      <div style="background: #353c4b">
+        <!--Acceleration-->
+        <div class="row mx-3">
+          <div class="col-md-12">
+            <p style="padding-top: 10px;">Acceleration:</p>
+            <div class="chart" id="graph-accel">
+                <canvas class="smoothie-chart" id="chart-accel" width="500" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!--Gyroscope-->
+        <div class="row mx-3">
+          <div class="col-md-12">
+            <p>Gyroscope: </p>
+            <div class="chart" id="graph-gyro">
+                <canvas class="smoothie-chart" id="chart-gyro" width="500" height="200"></canvas>
+              </div>
+          </div>
+        </div>
+
+        <!--magnetometer-->
+        <div class="row mx-3">
+          <div class="col-md-12">
+            <p>Magnetometer: </p>
+            <div class="chart" id="graph-mag">
+                <canvas class="smoothie-chart" id="chart-mag" width="500" height="2000"></canvas>
+              </div>
+          </div>
+        </div>
+
+        <!--Map-->
+        <div class="row mx-3">
+          <div class="col-md-12 ">
+            <p>Location: </p>
+            <div id="map-div">
+              <div class="map" id="map" style="height:25vh;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+
+
+
+
+  <script type="text/javascript" src="renderboard.js"></script>
+  <script type="text/javascript" src="navball.js"></script>
+  <script type="text/javascript" src="map.js"></script>
+  <script type="text/javascript" src="gauge.js"></script>
+  <script type="text/javascript" src="renderrocket.js"></script>
+  <script type="text/javascript" src="odometer.js"></script>
+  <script type="text/javascript" src="charts.js"></script>
+
+</body>
+
+</html>
