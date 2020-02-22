@@ -2,11 +2,115 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a92c2a3d-c211-4395-81c5-0f44d571c787" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/GroundControl/.idea/GroundControl.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GroundControl/Data/Current.json" beforeDir="false" afterPath="$PROJECT_DIR$/GroundControl/Data/Current.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GroundControl/app/static/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/GroundControl/app/static/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TelemetryModule/TelemetryModule.ino" beforeDir="false" afterPath="$PROJECT_DIR$/TelemetryModule/TelemetryModule.ino" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/Style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/charts.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/data/04-04-2019_23_54_05.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/datacollection.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/assets/favicon/android-chrome-192x192.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/assets/favicon/android-chrome-512x512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/assets/favicon/apple-touch-icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/assets/favicon/browserconfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/assets/favicon/favicon-16x16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/assets/favicon/favicon-32x32.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/assets/favicon/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/assets/favicon/mstile-150x150.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/assets/favicon/safari-pinned-tab.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/assets/favicon/site.webmanifest" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/css/bootstrap-grid.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/css/bootstrap-grid.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/css/bootstrap-grid.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/css/bootstrap-grid.min.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/css/bootstrap-reboot.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/css/bootstrap-reboot.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/css/bootstrap-reboot.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/css/bootstrap-reboot.min.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/css/bootstrap.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/css/bootstrap.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/css/bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/css/bootstrap.min.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/jquery-3.3.1.slim.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/js/bootstrap.bundle.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/js/bootstrap.bundle.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/js/bootstrap.bundle.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/js/bootstrap.bundle.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/js/bootstrap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/js/bootstrap.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/js/bootstrap.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/js/bootstrap.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/bootstrap/popper.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/css/bootstrap-solarized-dark.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/css/bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/css/epoch.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/css/epoch.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/css/fontawesome.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/css/images/maker-icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/css/leaflet.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/css/odometer.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/css/tests.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/index.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/GLTFLoader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/LoaderSupport.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/MTLLoader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/OBJLoader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/OBJLoader2.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/OrbitControls.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/PMREMCubeUVPacker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/PMREMGenerator.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/TextGeometry.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/WebGL.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/apexcharts.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/d3.v3.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/epoch.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/epoch.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/jquery.fittext.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/leaflet.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/odometer.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/reconnecting-websocket.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/smoothie.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/smoothie.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/stats.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/js/three.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/models/indicator.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/models/navball.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-brands-400.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-brands-400.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-brands-400.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-brands-400.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-brands-400.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-regular-400.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-regular-400.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-regular-400.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-regular-400.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-regular-400.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-solid-900.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-solid-900.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-solid-900.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-solid-900.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/dependancies/webfonts/fa-solid-900.woff2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/gauge.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/log.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/log.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/map.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/navball.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/object.mtl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/object.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/odometer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/readdata.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/render.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/render.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/render1.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/renderboard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/renderrocket.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/rocket.mtl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/rocket.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/run.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/telemetryDash/ubuntu_mono_bold.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,30 +271,30 @@
     </state>
     <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1581894311813" />
     <state x="868" y="229" key="FileChooserDialogImpl/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582329925946" />
-    <state width="1811" height="269" key="GridCell.Tab.0.bottom" timestamp="1582332311807">
+    <state width="1811" height="269" key="GridCell.Tab.0.bottom" timestamp="1582332757507">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1345" height="84" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1581894317329" />
-    <state width="1811" height="269" key="GridCell.Tab.0.bottom/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582332311807" />
-    <state width="1811" height="269" key="GridCell.Tab.0.center" timestamp="1582332311807">
+    <state width="1811" height="269" key="GridCell.Tab.0.bottom/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582332757507" />
+    <state width="1811" height="269" key="GridCell.Tab.0.center" timestamp="1582332757507">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1345" height="84" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1581894317329" />
-    <state width="1811" height="269" key="GridCell.Tab.0.center/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582332311807" />
-    <state width="1811" height="269" key="GridCell.Tab.0.left" timestamp="1582332311806">
+    <state width="1811" height="269" key="GridCell.Tab.0.center/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582332757507" />
+    <state width="1811" height="269" key="GridCell.Tab.0.left" timestamp="1582332757507">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1345" height="84" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1581894317329" />
-    <state width="1811" height="269" key="GridCell.Tab.0.left/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582332311806" />
-    <state width="1811" height="269" key="GridCell.Tab.0.right" timestamp="1582332311807">
+    <state width="1811" height="269" key="GridCell.Tab.0.left/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582332757507" />
+    <state width="1811" height="269" key="GridCell.Tab.0.right" timestamp="1582332757507">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1345" height="84" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1581894317329" />
-    <state width="1811" height="269" key="GridCell.Tab.0.right/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582332311807" />
-    <state x="720" y="362" key="com.intellij.ide.util.TipDialog" timestamp="1582329916807">
+    <state width="1811" height="269" key="GridCell.Tab.0.right/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582332757507" />
+    <state x="720" y="362" key="com.intellij.ide.util.TipDialog" timestamp="1582343326758">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="384" y="188" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1581893677535" />
-    <state x="720" y="362" key="com.intellij.ide.util.TipDialog/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582329916807" />
+    <state x="720" y="362" key="com.intellij.ide.util.TipDialog/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582343326758" />
   </component>
 </project>

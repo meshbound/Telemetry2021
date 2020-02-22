@@ -133,7 +133,7 @@ var ts_satellites = new TimeSeries();
 setInterval(function() {
   request_data();
   updateValues();
-  }, 1000);
+  }, 100);
 
 setInterval(function() {
   ts_accelnet.append(new Date().getTime(), values['accel']);
