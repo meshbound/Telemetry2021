@@ -19,12 +19,52 @@ function request_data() {
         async: false,
     });
     raw_data = new_data;
-    console.log(raw_data)
+    console.log(raw_data);
 }
 
-function updateValues(data_in){
-  parsed = event.data.split(',');
+function updateValues(){
+  //parsed = event.data.split(',');
 
+  // 0,1,22.19 BMP
+  var bmp = raw_data["!!"].split(',');
+  if(bmp.length > 2){
+    values['Temperature'] = bmp[2];
+    values['Humidity'] = '0';
+  }
+  // %%: "0,1,1.00,-0.04,0.04,0.00,7.25,18.19,-56.88,0.06,0.25,0.12,-0.75,-0.76,9.62"
+  var bno = raw_data["%%"].split(',');
+  if(bno.length > 2){
+    values['quat_w'] = bno[3];
+    values['quat_x'] = bno[4];
+    values['quat_y'] = bno[5];
+    values['quat_z'] = bno[6];
+    values['mag_x'] = bno[7];
+    values['mag_y'] = bno[8];
+    values['mag_z'] = bno[9];
+    values['gyro_x'] = bno[10];
+    values['gyro_y'] = bno[11];
+    values['gyro_z'] = bno[12];
+    values['accel_x'] = bno[13];
+    values['accel_y'] = bno[14];
+    values['accel_z'] = bno[15];
+    values['accel'] = Math.sqrt(bno[13]**2 + bno[14]**2 + bno[15]**2) - 9.8;
+  }
+
+  // @@: "0,1,0,0"
+  var css = raw_data["@@"].split(',');
+  if(css.length > 2){
+    values['CO2'] = css[2];
+    values['TVOC'] = css[3];
+  }
+
+  // ##: 0,1, '98936.75', '201.69']
+  var baro = raw_data["##"].split(',');
+  if(baro.length > 2){
+    values['Pressure'] = baro[2];
+    values['Altitude'] = baro[3];
+  }
+
+  /*
   switch (parsed[0]) {
     case "%%":
       values['quat_w'] = parsed[3];
@@ -68,6 +108,7 @@ function updateValues(data_in){
     default:
       break;
   };
+  */
 };
 
 var ts_accelnet = new TimeSeries();
@@ -91,6 +132,7 @@ var ts_satellites = new TimeSeries();
 
 setInterval(function() {
   request_data();
+  updateValues();
   }, 1000);
 
 setInterval(function() {

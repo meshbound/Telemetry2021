@@ -240,7 +240,7 @@ void request_baro(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint 
   char buffer[memSize];
   PString dataBARO(buffer, sizeof(buffer));
 
-  dataBARO << "##" << DELIMITER << baro.getPressure()  << DELIMITER << baro.getAltitude() << endl;
+  dataBARO << "##" << DELIMITER  << getTimestamp() << DELIMITER << baro.getPressure() << DELIMITER << baro.getAltitude() << endl;
   write_to_locations(serialPrint,sdPrint,xbeePrint,dataBARO);
 }
 
