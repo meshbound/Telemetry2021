@@ -2,115 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a92c2a3d-c211-4395-81c5-0f44d571c787" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/run.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/Style.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/charts.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/data/04-04-2019_23_54_05.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/datacollection.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/assets/favicon/android-chrome-192x192.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/assets/favicon/android-chrome-512x512.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/assets/favicon/apple-touch-icon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/assets/favicon/browserconfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/assets/favicon/favicon-16x16.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/assets/favicon/favicon-32x32.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/assets/favicon/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/assets/favicon/mstile-150x150.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/assets/favicon/safari-pinned-tab.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/assets/favicon/site.webmanifest" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/css/bootstrap-grid.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/css/bootstrap-grid.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/css/bootstrap-grid.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/css/bootstrap-grid.min.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/css/bootstrap-reboot.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/css/bootstrap-reboot.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/css/bootstrap-reboot.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/css/bootstrap-reboot.min.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/css/bootstrap.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/css/bootstrap.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/css/bootstrap.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/css/bootstrap.min.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/jquery-3.3.1.slim.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/js/bootstrap.bundle.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/js/bootstrap.bundle.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/js/bootstrap.bundle.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/js/bootstrap.bundle.min.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/js/bootstrap.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/js/bootstrap.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/js/bootstrap.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/js/bootstrap.min.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/popper.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/css/bootstrap-solarized-dark.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/css/bootstrap.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/css/epoch.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/css/epoch.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/css/fontawesome.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/css/images/maker-icon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/css/leaflet.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/css/odometer.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/css/tests.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/index.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/GLTFLoader.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/LoaderSupport.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/MTLLoader.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/OBJLoader.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/OBJLoader2.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/OrbitControls.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/PMREMCubeUVPacker.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/PMREMGenerator.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/TextGeometry.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/WebGL.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/apexcharts.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/d3.v3.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/epoch.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/epoch.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/jquery.fittext.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/leaflet.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/odometer.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/reconnecting-websocket.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/smoothie.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/smoothie.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/stats.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/js/three.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/models/indicator.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/models/navball.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-brands-400.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-brands-400.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-brands-400.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-brands-400.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-brands-400.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-regular-400.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-regular-400.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-regular-400.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-regular-400.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-regular-400.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-solid-900.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-solid-900.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-solid-900.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-solid-900.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/webfonts/fa-solid-900.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/gauge.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/index.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/log.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/map.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/navball.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/object.mtl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/object.obj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/odometer.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/readdata.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/render.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/renderboard.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/renderrocket.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/rocket.mtl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/rocket.obj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/run.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/ubuntu_mono_bold.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/templates/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/templates/log.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/templates/render.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GroundControl/app/templates/render1.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GroundControl/app/static/Current.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/app/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/GroundControl/app/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/app/static/data/04-04-2019_23_54_05.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/jquery-3.3.1.slim.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/GroundControl/app/static/dependancies/bootstrap/jquery-3.3.1.slim.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GroundControl/app/static/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/GroundControl/app/static/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,17 +32,17 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/GroundControl/app/run.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\jackc\Documents\GitHub\Telemetry2020\GroundControl\app\static" />
-      <recent name="C:\Users\jackc\Documents\GitHub\Telemetry2020\GroundControl\app\templates" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\jackc\Documents\GitHub\Telemetry2020\GroundControl\app" />
       <recent name="C:\Users\jackc\Documents\GitHub\Telemetry2020\GroundControl" />
       <recent name="C:\Users\jackc\Documents\GitHub\Telemetry2020\GroundControl\telemetryDash" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\jackc\Documents\GitHub\Telemetry2020\GroundControl\app\static" />
+      <recent name="C:\Users\jackc\Documents\GitHub\Telemetry2020\GroundControl\app\templates" />
     </key>
   </component>
   <component name="RunManager" selected="Python.backendTest">
@@ -213,8 +110,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.readTest" />
       <item itemvalue="Python.backendTest" />
+      <item itemvalue="Python.readTest" />
       <item itemvalue="Python.serialRecieve" />
     </list>
   </component>
@@ -261,35 +158,39 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1010" y="448" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582000169822" />
-    <state x="868" y="229" key="FileChooserDialogImpl" timestamp="1582088138447">
+    <state x="919" y="268" key="CommitChangelistDialog2" timestamp="1582328127829">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="919" y="268" key="CommitChangelistDialog2/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582328127829" />
+    <state x="868" y="229" key="FileChooserDialogImpl" timestamp="1582329826323">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1581894311813" />
-    <state x="868" y="229" key="FileChooserDialogImpl/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582088138447" />
-    <state width="1812" height="299" key="GridCell.Tab.0.bottom" timestamp="1582088309292">
+    <state x="868" y="229" key="FileChooserDialogImpl/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582329826323" />
+    <state width="1811" height="295" key="GridCell.Tab.0.bottom" timestamp="1582329805774">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1345" height="84" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1581894317329" />
-    <state width="1812" height="299" key="GridCell.Tab.0.bottom/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582088309292" />
-    <state width="1812" height="299" key="GridCell.Tab.0.center" timestamp="1582088309292">
+    <state width="1811" height="295" key="GridCell.Tab.0.bottom/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582329805774" />
+    <state width="1811" height="295" key="GridCell.Tab.0.center" timestamp="1582329805774">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1345" height="84" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1581894317329" />
-    <state width="1812" height="299" key="GridCell.Tab.0.center/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582088309292" />
-    <state width="1812" height="299" key="GridCell.Tab.0.left" timestamp="1582088309292">
+    <state width="1811" height="295" key="GridCell.Tab.0.center/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582329805774" />
+    <state width="1811" height="295" key="GridCell.Tab.0.left" timestamp="1582329805774">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1345" height="84" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1581894317329" />
-    <state width="1812" height="299" key="GridCell.Tab.0.left/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582088309292" />
-    <state width="1812" height="299" key="GridCell.Tab.0.right" timestamp="1582088309292">
+    <state width="1811" height="295" key="GridCell.Tab.0.left/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582329805774" />
+    <state width="1811" height="295" key="GridCell.Tab.0.right" timestamp="1582329805774">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="1345" height="84" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1581894317329" />
-    <state width="1812" height="299" key="GridCell.Tab.0.right/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582088309292" />
-    <state x="720" y="362" key="com.intellij.ide.util.TipDialog" timestamp="1582065675314">
+    <state width="1811" height="295" key="GridCell.Tab.0.right/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582329805774" />
+    <state x="720" y="362" key="com.intellij.ide.util.TipDialog" timestamp="1582329813492">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="384" y="188" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1581893677535" />
-    <state x="720" y="362" key="com.intellij.ide.util.TipDialog/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582065675314" />
+    <state x="720" y="362" key="com.intellij.ide.util.TipDialog/0.0.2560.1400/2560.197.1920.1040@0.0.2560.1400" timestamp="1582329813492" />
   </component>
 </project>

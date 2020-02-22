@@ -1,6 +1,4 @@
-// Set up variables
-var parsed = JSON.parse('{{ parsed|tojson }}');
-
+var raw_data
 var values = {'quat_w':'0', 'quat_x':'0', 'quat_y':'0', 'quat_z':'0',
               'gyro_x':'0', 'gyro_y':'0', 'gyro_z':'0',
               'mag_x':'0', 'mag_y':'0', 'mag_z':'0',
@@ -11,8 +9,20 @@ var values = {'quat_w':'0', 'quat_x':'0', 'quat_y':'0', 'quat_z':'0',
               'speed':'0', 'angle':'0', 'gps_alt':'0', 'satellites':'0'
              };
 
+function request_data() {
+    var new_data;
+    $.ajax({
+        url: '/request',
+        success: function (result) {
+            new_data = result;
+        },
+        async: false,
+    });
+    raw_data = new_data;
+    console.log(raw_data)
+}
 
-function updateValues(clean_data){
+function updateValues(data_in){
   parsed = event.data.split(',');
 
   switch (parsed[0]) {
@@ -78,6 +88,10 @@ var ts_speed = new TimeSeries();
 var ts_angle = new TimeSeries();
 var ts_gps_alt = new TimeSeries();
 var ts_satellites = new TimeSeries();
+
+setInterval(function() {
+  request_data();
+  }, 1000);
 
 setInterval(function() {
   ts_accelnet.append(new Date().getTime(), values['accel']);
