@@ -25,7 +25,54 @@ ser.write(str.encode("-"))  # "-" skips the fix for the GPS
 time.sleep(1)
 ser.write(str.encode("+"))  # telemetry module will not transmit data until "+" is sent
 
-data_dict = {"!!": "", "@@": "", "##": "", "%%": "", "$$": ""}
+data_raw_dict = {"!!": "", "@@": "", "##": "", "%%": "", "$$": ""}
+
+data_clean_dict = {"bmp": {"temperature": ""},
+
+                   "ccs": {"co2": "", "tvoc": ""},
+
+                   "baro": {"pressure": "", "altitude": ""},
+
+                   "bno": {"quaternion ": {"quat_w": "", "quat_x": "", "quat_y": "", "quat_z": ""},
+                           "mag": {"mag_x": "", "mag_y": "", "mag_z": ""},
+                           "gyroscope": {"gyro_x": "", "gyro_y": "", "gyro_z": ""},
+                           "accelerometer": {"accel_x": "", "accel_y": "", "accel_z": ""}
+                           },
+
+                   "gps": {"time": {"hour": "", "min": "", "sec": "", "milli": "", "day": "", "month": "", "year": ""},
+                           "connection": {"fix": "", "fix_quality": ""},
+                           "positon": {"latitude": "", "lat": "", "longitude": "", "long": ""},
+                           "info": {"speed": "", "angle": "", "altitude": "", "satellites": ""}
+                           }
+                   }
+
+
+def apply_to_dict(key, data, offset):
+    i = 0 + offset
+    for sub_key in data_clean_dict[key].items():
+        for sub_sub_key in data_clean_dict[key][sub_key[0]]:
+            data_clean_dict[key][sub_key[0]][sub_sub_key] = data[i]
+            i += 1
+
+def proper_format(tag, incoming):
+    data = incoming.replace(tag + ',', "").split(',')
+    offset = 1
+
+    if (tag == "!!"):
+        data_clean_dict["bmp"]["temperature"] = data[offset + 1];
+    elif (tag == "@@"):
+        data_clean_dict["ccs"]["co2"] = data[offset + 1];
+        data_clean_dict["ccs"]["tvoc"] = data[offset + 2];
+    elif (tag == "##"):
+        data_clean_dict["baro"]["pressure"] = data[offset + 1];
+        data_clean_dict["baro"]["altitude"] = data[offset + 2];
+    elif (tag == "%%"):
+        apply_to_dict("bno", data, offset+1)
+    elif (tag == "$$"):
+        apply_to_dict("gps", data, offset+1)
+
+    return data_clean_dict
+
 
 current = 0
 while True:
@@ -50,9 +97,8 @@ while True:
         dataDump.close()
 
     with open(temp_path, 'w') as dataTemp:
-        if tag in data_dict:
-            data_dict[tag] = incoming_raw.replace(tag + ',', "")
-            json.dump(data_dict, dataTemp, default=json)
+        if tag in data_raw_dict:
+            json.dump(proper_format(tag, incoming_raw), dataTemp, default=json)
         dataTemp.close()
 
 ser.close()
