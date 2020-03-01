@@ -5,24 +5,29 @@ import os
 import json
 import datetime
 
-SERIAL_PORT = "COM3"
+SERIAL_PORT = "COM4"
 BAUD_RATE = 9600
-received = 0
 
+
+write_dump = False;
+
+
+# keeps track of receiving data
+received = 0
 total_data = 0
 average_data = 0
 
 # ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
 date = datetime.date.today()
 
+# paths
 path = "./Data/"
-
 dump_path_temp = "{0}dump-({1}).csv"
 dump_path_finial = ""
 temp_path = "{}Current.json".format(path)
-
 start_dump = path + str(date) + "-"
 
+# initialize the serial connection
 ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
 
 ser.write(str.encode("-"))  # "-" skips the fix for the GPS
@@ -37,7 +42,7 @@ data_clean_dict = {"bme": {"temperature": "", "humidity": ""},
 
                    "baro": {"pressure": "", "altitude": ""},
 
-                   "bno": {"quaternion ": {"quat_w": "", "quat_x": "", "quat_y": "", "quat_z": ""},
+                   "bno": {"quaternion": {"quat_w": "", "quat_x": "", "quat_y": "", "quat_z": ""},
                            "mag": {"mag_x": "", "mag_y": "", "mag_z": ""},
                            "gyroscope": {"gyro_x": "", "gyro_y": "", "gyro_z": ""},
                            "accelerometer": {"accel_x": "", "accel_y": "", "accel_z": ""}
@@ -57,6 +62,7 @@ def calc_average():
     total_data += data_clean_dict["data"]["current"]
     average_data = total_data // received
     data_clean_dict["data"]["average"] = average_data
+    print("average" + average_data + " current " + data_clean_dict["data"]["current"])
 
 
 def apply_to_dict(key, data, offset):
@@ -72,8 +78,8 @@ def proper_format(tag, incoming):
     offset = 1
 
     if (tag == "!!"):
-        data_clean_dict["bmp"]["temperature"] = data[offset + 1];
-        data_clean_dict["bmp"]["humidity"] = data[offset + 2];
+        data_clean_dict["bme"]["temperature"] = data[offset + 1];
+        data_clean_dict["bme"]["humidity"] = data[offset + 2];
     elif (tag == "@@"):
         data_clean_dict["ccs"]["co2"] = data[offset + 1];
         data_clean_dict["ccs"]["tvoc"] = data[offset + 2];
@@ -88,31 +94,33 @@ def proper_format(tag, incoming):
     return data_clean_dict
 
 
-current = 0
-while True:
-    testName = dump_path_temp.format(start_dump, current)
-    if os.path.exists(testName):
-        current += 1
-    else:
-        dump_path_finial = testName
-        break;
+if write_dump:
+    current = 0
+    while True:
+        testName = dump_path_temp.format(start_dump, current)
+        if os.path.exists(testName):
+            current += 1
+        else:
+            dump_path_finial = testName
+            break;
 
 while True:
-
-    incoming_raw = ser.readline().strip().decode("utf-8")
+    incoming = ser.readline()
+    incoming_raw = incoming.strip().decode("utf-8")
     incoming_split = incoming_raw.split(",")
 
     tag = incoming_split[0]
 
     received += 1
-    data_clean_dict["data"]["current"] =
+    data_clean_dict["data"]["current"] = len(incoming)
     
     print(incoming_split)
 
-    with open(dump_path_finial, 'a') as dataDump:
-        writer = csv.writer(dataDump)
-        writer.writerow(incoming_split)
-        dataDump.close()
+    if write_dump:
+        with open(dump_path_finial, 'a') as dataDump:
+            writer = csv.writer(dataDump)
+            writer.writerow(incoming_split)
+            dataDump.close()
 
     with open(temp_path, 'w') as dataTemp:
         if tag in data_raw_dict:

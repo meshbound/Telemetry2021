@@ -529,6 +529,7 @@ State nextState(State state) {
 }
 
 void loop() {
+  /*
   state = WAIT;
   
   switch (state){
@@ -551,6 +552,7 @@ void loop() {
       break;
   }
   state = nextState(state);
+  */
   
   read_all_data();
 }
