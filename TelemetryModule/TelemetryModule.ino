@@ -10,7 +10,7 @@
 #include <TimeLib.h>
 #include <SoftTimers.h>
 
-#include <Adafruit_BMP280.h>
+#include <Adafruit_BME280.h>
 #include <Adafruit_CCS811.h>
 #include <Adafruit_MPL3115A2.h>
 #include <Adafruit_GPS.h>
@@ -18,10 +18,8 @@
 
 /* ---------- Sensors ---------- */
 
-// BMP280
-Adafruit_BMP280 bmp;
-Adafruit_Sensor *bmp_temp = bmp.getTemperatureSensor();
-Adafruit_Sensor *bmp_pressure = bmp.getPressureSensor();
+// BME280
+Adafruit_BME280 bme; 
 
 // CCS811
 Adafruit_CCS811 ccs;
@@ -44,12 +42,12 @@ bool b_useSerial; bool b_useXbee;
 
 bool b_testResult; bool b_xbeeResult; bool b_sdResult; bool b_GPSResult;
 
-bool b_usebmp; bool b_useccs; bool b_usebaro; bool b_usebno;
+bool b_usebme; bool b_useccs; bool b_usebaro; bool b_usebno;
 
 char c, d;
 
 // Buzzer
-const uint8_t BUZZER_PIN = LED_BUILTIN;
+const uint8_t BUZZER_PIN = 10;
 
 //Xbee
 const uint32_t XBEE_BAUD = 9600;
@@ -80,12 +78,12 @@ State state = WAIT;
 
 bool init_sensors(){
 
-  b_usebmp = init_bmp();
+  b_usebme = init_bme();
   b_useccs = init_ccs();
   b_usebaro = init_baro();
   b_usebno = init_bno();
   
-  bool test = b_usebmp && b_useccs && b_usebaro && b_usebno;
+  bool test = b_usebme && b_useccs && b_usebaro && b_usebno;
   b_testResult = test;
 
   return test;
@@ -156,39 +154,29 @@ uint32_t getTime() {
 
 /* ---------- Sensor methods ---------- */
 
-// BMP280
-boolean init_bmp(){
-  if (!bmp.begin()){
+// BME280
+boolean init_bme(){
+  if (!bme.begin()){
 
     if (b_useSerial){
-      Serial << "# BMP280 failed to initalize" << endl;
+      Serial << "# BME280 failed to initalize" << endl;
     }
     if (b_useXbee){
-      Serial1 << "# BMP280 failed to initalize" << endl;
+      Serial1 << "# BME280 failed to initalize" << endl;
     }
 
     return false;
   }
 
-  /* Default settings from datasheet. */
-  bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
-                  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
-                  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
-                  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
-                  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
-
   return true;
 }
 
-void request_bmp(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true){
+void request_bme(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true){
   char buffer[memSize];
-  PString dataBMP(buffer, sizeof(buffer));
+  PString dataBME(buffer, sizeof(buffer));
 
-  sensors_event_t temp_event;
-  bmp_temp->getEvent(&temp_event);
-
-  dataBMP << "!!" << DELIMITER << getTimestamp() << DELIMITER << temp_event.temperature << endl;
-  write_to_locations(serialPrint,sdPrint,xbeePrint,dataBMP);
+  dataBME << "!!" << DELIMITER << getTimestamp() << DELIMITER << bme.readTemperature() << DELIMITER << bme.readHumidity() << endl;
+  write_to_locations(serialPrint,sdPrint,xbeePrint,dataBME);
 }
 
 //CCS811
@@ -411,8 +399,8 @@ void read_all_data(){
    }
    */
 
-   if(b_usebmp){
-    request_bmp();
+   if(b_usebme){
+    request_bme();
    }
 
    if(b_useccs){
@@ -541,7 +529,8 @@ State nextState(State state) {
 }
 
 void loop() {
-  /*
+  state = WAIT;
+  
   switch (state){
     case WAIT:
       runWait();
@@ -562,6 +551,6 @@ void loop() {
       break;
   }
   state = nextState(state);
-  */
+  
   read_all_data();
 }
