@@ -1,38 +1,16 @@
-import serial
 import csv
 import time
-import os
 import json
-import datetime
 
-SERIAL_PORT = "COM4"
-BAUD_RATE = 9600
+chunk_size = 4
+chunk_elapsed = 0
 
+# imitates real life latency, 1 is close to reality
+delay_factor = 0.5
 
-write_dump = False;
-
-
-# keeps track of receiving data
-received = 0
-total_data = 0
-average_data = 0
-
-# ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
-date = datetime.date.today()
-
-# paths
 path = "./Data/"
-dump_path_temp = "{0}dump-({1}).csv"
-dump_path_finial = ""
-temp_path = "{}Current.json".format(path)
-start_dump = path + str(date) + "-"
-
-# initialize the serial connection
-ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
-
-ser.write(str.encode("-"))  # "-" skips the fix for the GPS
-time.sleep(1)
-ser.write(str.encode("+"))  # telemetry module will not transmit data until "+" is sent
+target_log = "{}2020-02-21-dump-(1).csv".format(path)
+temp_path = "{}LogCurrent.json".format(path)
 
 data_raw_dict = {"!!": "", "@@": "", "##": "", "%%": "", "$$": ""}
 
@@ -53,16 +31,8 @@ data_clean_dict = {"bme": {"temperature": "", "humidity": ""},
                            "positon": {"latitude": "", "lat": "", "longitude": "", "long": ""},
                            "info": {"speed": "", "angle": "", "altitude": "", "satellites": ""}
                            },
-                   "data" : {"current": 0, "average": 0}
+                   "data": {"current": 0, "average": 0}
                    }
-
-
-def calc_average():
-    global total_data, average_data
-    total_data += data_clean_dict["data"]["current"]
-    average_data = total_data // received
-    data_clean_dict["data"]["average"] = average_data
-    print("average" + average_data + " current " + data_clean_dict["data"]["current"])
 
 
 def apply_to_dict(key, data, offset):
@@ -73,13 +43,13 @@ def apply_to_dict(key, data, offset):
             i += 1
 
 
-def proper_format(tag, incoming):
-    data = incoming.replace(tag + ',', "").split(',')
+def proper_format(tag, data):
+    data.remove(tag)
     offset = 1
 
     if (tag == "!!"):
         data_clean_dict["bme"]["temperature"] = data[offset + 1];
-        data_clean_dict["bme"]["humidity"] = data[offset + 2];
+        # data_clean_dict["bme"]["humidity"] = data[offset + 2];
     elif (tag == "@@"):
         data_clean_dict["ccs"]["co2"] = data[offset + 1];
         data_clean_dict["ccs"]["tvoc"] = data[offset + 2];
@@ -94,38 +64,27 @@ def proper_format(tag, incoming):
     return data_clean_dict
 
 
-if write_dump:
-    current = 0
-    while True:
-        testName = dump_path_temp.format(start_dump, current)
-        if os.path.exists(testName):
-            current += 1
-        else:
-            dump_path_finial = testName
-            break;
+def clean_read(data, tag, delay):
+    global chunk_elapsed
+    chunk_elapsed += 1
 
-while True:
-    incoming = ser.readline()
-    incoming_raw = incoming.strip().decode("utf-8")
-    incoming_split = incoming_raw.split(",")
-
-    tag = incoming_split[0]
-
-    received += 1
-    data_clean_dict["data"]["current"] = len(incoming)
-    calc_average()
-    
-    print(incoming_split)
-
-    if write_dump:
-        with open(dump_path_finial, 'a') as dataDump:
-            writer = csv.writer(dataDump)
-            writer.writerow(incoming_split)
-            dataDump.close()
+    if chunk_elapsed > chunk_size:
+        time.sleep(delay)
+        chunk_elapsed = 0
 
     with open(temp_path, 'w') as dataTemp:
-        if tag in data_raw_dict:
-            json.dump(proper_format(tag, incoming_raw), dataTemp, default=json)
+        json.dump(proper_format(tag, data), dataTemp, default=json)
         dataTemp.close()
 
-ser.close()
+    print(data)
+
+with open(target_log) as log:
+    log_reader = csv.reader(log, delimiter=',')
+    for row in log_reader:
+        if not row == []:
+
+            contents = row
+            tag = contents[0]
+
+            if tag in data_raw_dict:
+                clean_read(contents, tag, delay_factor)
