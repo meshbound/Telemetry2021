@@ -38,16 +38,16 @@ Adafruit_GPS GPS(&Serial3);
 
 /* ---------- Variables ---------- */
 
-bool b_useSerial; bool b_useXbee;
+bool b_useSerial = false; bool b_useXbee = false;
 
-bool b_testResult; bool b_xbeeResult; bool b_sdResult; bool b_GPSResult;
+bool b_testResult = false; bool b_xbeeResult = false; bool b_sdResult = false; bool b_GPSResult = false;
 
-bool b_usebme; bool b_useccs; bool b_usebaro; bool b_usebno;
+bool b_usebme = false; bool b_useccs = false; bool b_usebaro = false; bool b_usebno = false;
 
 char c, d;
 
 // Buzzer
-const uint8_t BUZZER_PIN = 10;
+const uint8_t BUZZER_PIN = 6;
 
 //Xbee
 const uint32_t XBEE_BAUD = 9600;
@@ -92,6 +92,24 @@ bool init_sensors(){
 void init_serial(){
   Serial.begin(9600);
   b_useSerial = true;
+}
+
+void verify(bool value, int repeat){
+  if(value){
+    for(int i = 0; i < repeat; i++){
+      tone(BUZZER_PIN, 1000);
+      delay(500);
+      noTone(BUZZER_PIN);
+      delay(500);
+    }
+  }else{
+    for(int i = 0; i < repeat; i++){
+      tone(BUZZER_PIN, 500);
+      delay(500);
+      noTone(BUZZER_PIN);
+      delay(500);
+    }
+  }
 }
 
 /* ---------- Time ---------- */
@@ -378,6 +396,11 @@ void init_all() {
   init_gps();
   init_sensors();
 
+  verify(b_testResult,1);
+  verify(b_GPSResult,1);
+  verify(b_xbeeResult,1);
+  verify(b_sdResult,1);
+  
   if(b_useSerial){
     Serial << "# Sensors init exited with " + String(b_testResult) << endl;
     Serial << "# Xbee init exited with " + String(b_xbeeResult) << endl;
@@ -403,17 +426,21 @@ void read_all_data(){
     request_bme();
    }
 
+   
    if(b_useccs){
     request_ccs();
    }
 
+   /*
    if(b_usebaro){
     request_baro();
    }
-
+   */
+   
    if(b_usebno){
     request_bno();
    }
+   
 }
 
 void setup() {

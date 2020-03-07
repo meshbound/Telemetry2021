@@ -5,7 +5,7 @@ import os
 import json
 import datetime
 
-SERIAL_PORT = "COM4"
+SERIAL_PORT = "COM7"
 BAUD_RATE = 9600
 
 
@@ -113,7 +113,7 @@ while True:
 
     received += 1
     data_clean_dict["data"]["current"] = len(incoming)
-    calc_average()
+    #calc_average()
     
     print(incoming_split)
 
