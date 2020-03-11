@@ -5,7 +5,7 @@ import os
 import json
 import datetime
 
-SERIAL_PORT = "COM7"
+SERIAL_PORT = "COM4"
 BAUD_RATE = 9600
 
 
@@ -29,10 +29,6 @@ start_dump = path + str(date) + "-"
 
 # initialize the serial connection
 ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
-
-ser.write(str.encode("-"))  # "-" skips the fix for the GPS
-time.sleep(1)
-ser.write(str.encode("+"))  # telemetry module will not transmit data until "+" is sent
 
 data_raw_dict = {"!!": "", "@@": "", "##": "", "%%": "", "$$": ""}
 
@@ -104,28 +100,43 @@ if write_dump:
             dump_path_finial = testName
             break;
 
-while True:
-    incoming = ser.readline()
-    incoming_raw = incoming.strip().decode("utf-8")
-    incoming_split = incoming_raw.split(",")
 
-    tag = incoming_split[0]
+def init_module():
+    print("Starting init...")
+    ser.write(str.encode("-"))  # "-" skips the fix for the GPS
+    ser.write(str.encode("+"))  # telemetry module will not transmit data until "+" is sent
+    print("init completed!")
 
-    received += 1
-    data_clean_dict["data"]["current"] = len(incoming)
-    #calc_average()
-    
-    print(incoming_split)
 
-    if write_dump:
-        with open(dump_path_finial, 'a') as dataDump:
-            writer = csv.writer(dataDump)
-            writer.writerow(incoming_split)
-            dataDump.close()
+def read():
+    global received
 
-    with open(temp_path, 'w') as dataTemp:
-        if tag in data_raw_dict:
-            json.dump(proper_format(tag, incoming_raw), dataTemp, default=json)
-        dataTemp.close()
+    while True:
+        incoming = ser.readline()
+        incoming_raw = incoming.strip().decode("utf-8")
+        incoming_split = incoming_raw.split(",")
 
-ser.close()
+        tag = incoming_split[0]
+
+        received += 1
+        data_clean_dict["data"]["current"] = len(incoming)
+        # calc_average()
+
+        print(incoming_split)
+
+        if write_dump:
+            with open(dump_path_finial, 'a') as dataDump:
+                writer = csv.writer(dataDump)
+                writer.writerow(incoming_split)
+                dataDump.close()
+
+        with open(temp_path, 'w') as dataTemp:
+            if tag in data_raw_dict:
+                json.dump(proper_format(tag, incoming_raw), dataTemp, default=json)
+            dataTemp.close()
+
+        if incoming_split[0] == "req":
+            print("request incoming...")
+            init_module()
+
+read()
