@@ -1,16 +1,15 @@
 import serial
 import csv
-import time
 import os
 import json
 import datetime
+import threading
+from GroundControl.visualizer import *
 
-SERIAL_PORT = "COM4"
+SERIAL_PORT = "COM7"
 BAUD_RATE = 9600
 
-
 write_dump = False;
-
 
 # keeps track of receiving data
 received = 0
@@ -30,26 +29,29 @@ start_dump = path + str(date) + "-"
 # initialize the serial connection
 ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
 
-data_raw_dict = {"!!": "", "@@": "", "##": "", "%%": "", "$$": ""}
+data_temp_dict = {}
 
-data_clean_dict = {"bme": {"temperature": "", "humidity": ""},
+data_raw_dict = {"!!": "0", "@@": "0", "##": "0", "%%": "0", "$$": "0"}
 
-                   "ccs": {"co2": "", "tvoc": ""},
+data_clean_dict = {"bme": {"temperature": "0", "humidity": "0"},
 
-                   "baro": {"pressure": "", "altitude": ""},
+                   "ccs": {"co2": "0", "tvoc": "0"},
 
-                   "bno": {"quaternion": {"quat_w": "", "quat_x": "", "quat_y": "", "quat_z": ""},
-                           "mag": {"mag_x": "", "mag_y": "", "mag_z": ""},
-                           "gyroscope": {"gyro_x": "", "gyro_y": "", "gyro_z": ""},
-                           "accelerometer": {"accel_x": "", "accel_y": "", "accel_z": ""}
+                   "baro": {"pressure": "0", "altitude": "0"},
+
+                   "bno": {"quaternion": {"quat_w": "0", "quat_x": "0", "quat_y": "0", "quat_z": "0"},
+                           "mag": {"mag_x": "0", "mag_y": "0", "mag_z": "0"},
+                           "gyroscope": {"gyro_x": "0", "gyro_y": "0", "gyro_z": "0"},
+                           "accelerometer": {"accel_x": "0", "accel_y": "0", "accel_z": "0"}
                            },
 
-                   "gps": {"time": {"hour": "", "min": "", "sec": "", "milli": "", "day": "", "month": "", "year": ""},
-                           "connection": {"fix": "", "fix_quality": ""},
-                           "positon": {"latitude": "", "lat": "", "longitude": "", "long": ""},
-                           "info": {"speed": "", "angle": "", "altitude": "", "satellites": ""}
+                   "gps": {"time": {"hour": "0", "min": "0", "sec": "0", "milli": "0", "day": "0", "month": "0", "year": "0"},
+                           "connection": {"fix": "0", "fix_quality": "0"},
+                           "positon": {"latitude": "0", "lat": "0", "longitude": "0", "long": "0"},
+                           "info": {"speed": "0", "angle": "0", "altitude": "0", "satellites": "0"}
                            },
-                   "data" : {"current": 0, "average": 0}
+
+                   "data": {"current": 0, "average": 0}
                    }
 
 
@@ -83,9 +85,9 @@ def proper_format(tag, incoming):
         data_clean_dict["baro"]["pressure"] = data[offset + 1];
         data_clean_dict["baro"]["altitude"] = data[offset + 2];
     elif (tag == "%%"):
-        apply_to_dict("bno", data, offset+1)
+        apply_to_dict("bno", data, offset + 1)
     elif (tag == "$$"):
-        apply_to_dict("gps", data, offset+1)
+        apply_to_dict("gps", data, offset + 1)
 
     return data_clean_dict
 
@@ -101,42 +103,49 @@ if write_dump:
             break;
 
 
-def init_module():
-    print("Starting init...")
-    ser.write(str.encode("-"))  # "-" skips the fix for the GPS
-    ser.write(str.encode("+"))  # telemetry module will not transmit data until "+" is sent
-    print("init completed!")
-
-
 def read():
-    global received
+    global received, data_temp_dict
 
     while True:
-        incoming = ser.readline()
-        incoming_raw = incoming.strip().decode("utf-8")
-        incoming_split = incoming_raw.split(",")
+        try:
+            incoming = ser.readline()
+            incoming_raw = incoming.strip().decode("utf-8")
+            incoming_split = incoming_raw.split(",")
 
-        tag = incoming_split[0]
+            tag = incoming_split[0]
 
-        received += 1
-        data_clean_dict["data"]["current"] = len(incoming)
-        # calc_average()
+            received += 1
+            data_clean_dict["data"]["current"] = len(incoming)
+            # calc_average()
 
-        print(incoming_split)
+            print(incoming_split)
 
-        if write_dump:
-            with open(dump_path_finial, 'a') as dataDump:
-                writer = csv.writer(dataDump)
-                writer.writerow(incoming_split)
-                dataDump.close()
+            if write_dump:
+                with open(dump_path_finial, 'a') as dataDump:
+                    writer = csv.writer(dataDump)
+                    writer.writerow(incoming_split)
+                    dataDump.close()
 
-        with open(temp_path, 'w') as dataTemp:
-            if tag in data_raw_dict:
-                json.dump(proper_format(tag, incoming_raw), dataTemp, default=json)
-            dataTemp.close()
+            with open(temp_path, 'w') as dataTemp:
+                if tag in data_raw_dict:
+                    json.dump(proper_format(tag, incoming_raw), dataTemp, default=json)
+                dataTemp.close()
 
-        if incoming_split[0] == "req":
-            print("request incoming...")
-            init_module()
+            updateAllData(data_clean_dict)
 
-read()
+
+            if incoming_split[0] == "req":
+                print("request incoming...")
+                ser.write(str.encode("-"))  # "-" skips the fix for the GPS
+            elif incoming_split[0] == "apc":
+                ser.write(str.encode("+"))  # telemetry module will not transmit data until "+" is sent
+        except:
+            print("An exception has occurred, ignoring...")
+
+
+# initialize threaded functions
+read_thread = threading.Thread(target=read)
+
+
+read_thread.start()
+beginVisual()

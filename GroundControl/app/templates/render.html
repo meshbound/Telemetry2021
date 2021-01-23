@@ -11,48 +11,48 @@
   <meta name="description" content="Telemetry dashboard">
   <meta name="keywords" content="telemetry, rockets, west high school, madison west rocket club">
   <!-- Favicon -->
-  <link rel="apple-touch-icon" sizes="180x180" href="./dependancies/assets/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./dependancies/assets/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="./dependancies/assets/favicon/favicon-16x16.png">
-  <link rel="manifest" href=".dependancies/assets/favicon/site.webmanifest">
-  <link rel="mask-icon" href=".dependancies/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
-  <link rel="shortcut icon" href=".dependancies/assets/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='./dependancies/assets/favicon/apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='./dependancies/assets/favicon/favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='./dependancies/assets/favicon/favicon-16x16.png') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='.dependancies/assets/favicon/site.webmanifest') }}">
+  <link rel="mask-icon" href="{{ url_for('static', filename='.dependancies/assets/favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='.dependancies/assets/favicon/favicon.ico') }}">
   <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="msapplication-config" content=".dependancies/assets/favicon/browserconfig.xml">
+  <meta name="msapplication-config" content="{{ url_for('static', filename='.dependancies/assets/favicon/browserconfig.xml') }}">
   <meta name="theme-color" content="#ffffff">
 
   <!-- Init CSS -->
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=font1|font2|etc" type="text/css">
-  <link rel="stylesheet" href="./dependancies/css/leaflet.css"/>
-  <link rel="stylesheet" type="text/css" href="dependancies/css/epoch.css">
-  <link rel="stylesheet" type="text/css" href="./dependancies/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="Style.css" type="text/css">
-  <link rel="stylesheet" href="index.css" type="text/css">
-  <link rel="stylesheet" href="./dependancies/css/fontawesome.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='./dependancies/css/leaflet.css') }}"/>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dependancies/css/epoch.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='./dependancies/bootstrap/css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='Style.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" type="text/css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='./dependancies/css/fontawesome.min.css') }}">
   <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet'>
 
   <!-- Javascript Init Prerequisites -->
-  <script type="text/javascript" src="./dependancies/js/reconnecting-websocket.min.js"></script>
-  <script type="text/javascript" src="./dependancies/js/three.min.js"></script>
-  <script type="text/javascript" src="./dependancies/js/OrbitControls.js"></script>
-  <script type="text/javascript" src="./dependancies/js/WebGL.js"></script>
-  <script type="text/javascript" src="./dependancies/js/TextGeometry.js"></script>
-  <script type="text/javascript" src="./dependancies/js/OBJLoader.js"></script>
-  <script type="text/javascript" src="./dependancies/js/MTLLoader.js"></script>
-  <script type="text/javascript" src="./dependancies/js/smoothie.js"></script>
-  <script type="text/javascript" src="./dependancies/js/leaflet.js"></script>
-  <link rel="stylesheet" href="./dependancies/css/odometer.css" />
-  <script src="./dependancies/js/odometer.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='./dependancies/js/reconnecting-websocket.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='./dependancies/js/three.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='./dependancies/js/OrbitControls.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='./dependancies/js/WebGL.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='./dependancies/js/TextGeometry.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='./dependancies/js/OBJLoader.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='./dependancies/js/MTLLoader.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='./dependancies/js/smoothie.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='./dependancies/js/leaflet.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='./dependancies/css/odometer.css') }}" />
+  <script src="{{ url_for('static', filename='./dependancies/js/odometer.min.js') }}"></script>
 
-  <script type="text/javascript" src="./dependancies/bootstrap/jquery-3.3.1.slim.min.js"></script>
-  <script type="text/javascript" src="./dependancies/js/d3.v3.min.js" charset="utf-8"></script>
-  <script type="text/javascript" src="./dependancies/js/epoch.js"></script>
-  <script type="text/javascript" src="./dependancies/bootstrap/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="./dependancies/bootstrap/popper.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='./dependancies/bootstrap/jquery-3.3.1.slim.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='./dependancies/js/d3.v3.min.js') }}" charset="utf-8"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='./dependancies/js/epoch.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='./dependancies/bootstrap/js/bootstrap.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='./dependancies/bootstrap/popper.min.js') }}"></script>
 </head>
 <h2 style="padding-left: 10px;">MADISON WEST ROCKETRY: TELEMETRY DASH.</h2>
 <body>
-  <script type="text/javascript" src="datacollection.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='datacollection.js') }}"></script>
   <div class="3dDisplay" id="board_render"></div>
   <div class="container-fluid" style="z-index: 1;">
   <div class="row h-75">
@@ -187,13 +187,13 @@
 
 
 
-  <script type="text/javascript" src="renderboard.js"></script>
-  <script type="text/javascript" src="navball.js"></script>
-  <script type="text/javascript" src="map.js"></script>
-  <script type="text/javascript" src="gauge.js"></script>
-  <script type="text/javascript" src="renderrocket.js"></script>
-  <script type="text/javascript" src="odometer.js"></script>
-  <script type="text/javascript" src="charts.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='renderboard.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='navball.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='map.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='gauge.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='renderrocket.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='odometer.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='charts.js') }}"></script>
 
 </body>
 

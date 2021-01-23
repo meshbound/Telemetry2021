@@ -6,9 +6,7 @@
 
 #include <Streaming.h>
 #include <PString.h>
-#include <Time.h>
 #include <TimeLib.h>
-#include <SoftTimers.h>
 
 #include <Adafruit_BME280.h>
 #include <Adafruit_CCS811.h>
@@ -31,20 +29,20 @@ Adafruit_MPL3115A2 baro = Adafruit_MPL3115A2();
 Adafruit_BNO055 bno = Adafruit_BNO055();
 
 // SD Card
-const uint8_t SELECT_SLVE = 53;
+const uint8_t SELECT_SLVE = 10;
 
 // GPS
-Adafruit_GPS GPS(&Serial3);
+Adafruit_GPS GPS(&Serial2);
+
+// Payload UART Serial3
 
 /* ---------- Variables ---------- */
 
-bool b_useSerial = false; bool b_useXbee = false;
-
+bool b_useSerial = true; bool b_useXbee = false;
 bool b_testResult = false; bool b_xbeeResult = false; bool b_sdResult = false; bool b_GPSResult = false;
-
 bool b_usebme = false; bool b_useccs = false; bool b_usebaro = false; bool b_usebno = false;
 
-char c, d;
+char c;
 
 // Buzzer
 const uint8_t BUZZER_PIN = 6;
@@ -67,10 +65,9 @@ uint8_t decoded_buffer[MAX_BUFFER];
 
 //Timers
 uint32_t START_TIME, START_TIME_GPS;
-SoftTimer timeoutINIT;
 
 //States
-enum State {WAIT, ARM, RUN, READY, SHUTDOWN, ERR};
+enum State {WAIT, ARM, READY, RUN};
 State state = WAIT;
 
 
@@ -89,26 +86,32 @@ bool init_sensors() {
   return test;
 }
 
+void init_payload(){
+  Serial3.begin(9600);
+}
+
 void init_serial() {
   Serial.begin(9600);
   b_useSerial = true;
 }
 
-void verify(bool value, int repeat) {
+void verify(bool value) {
   if (value) {
-    for (int i = 0; i < repeat; i++) {
-      tone(BUZZER_PIN, 1000);
-      delay(500);
-      noTone(BUZZER_PIN);
-      delay(500);
-    }
+    tone(BUZZER_PIN, 1000);
   } else {
-    for (int i = 0; i < repeat; i++) {
-      tone(BUZZER_PIN, 500);
-      delay(500);
-      noTone(BUZZER_PIN);
-      delay(500);
-    }
+    tone(BUZZER_PIN, 500);
+  }
+  delay(500);
+  noTone(BUZZER_PIN);
+  delay(500);
+}
+
+void send_message(String message){
+  if (b_useSerial) {
+    Serial << message << endl;
+  }
+  if (b_useXbee) {
+    Serial2 << message << endl;
   }
 }
 
@@ -116,17 +119,15 @@ void verify(bool value, int repeat) {
 
 void init_time() {
   START_TIME = millis();
-  START_TIME_GPS = getTime();
-
-  if (b_useXbee) {
-    Serial1 << "# Initialized GPS Time (ms): " << START_TIME_GPS << endl;
-    Serial1 << "# Initialized Millis Start Time (ms): " << START_TIME << endl;
-    Serial1 << "# Initalization Time (ms): " << millis() << endl;
-  }
+  START_TIME_GPS = get_time();
+  
+  send_message("# Initialized GPS Time (ms): " + String(START_TIME_GPS));
+  send_message("# Initialized Millis Start Time (ms): " + String(START_TIME));
+  send_message("# Initalization Time (ms): " + String(millis()));
 
 }
 
-PString getTimestamp(uint16_t memSize = 50, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true) {
+PString get_timestamp(uint16_t memSize = 50, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true) {
   uint32_t elapsedTime = millis() - START_TIME;
   uint32_t inputMillis = elapsedTime + START_TIME_GPS;
 
@@ -148,7 +149,7 @@ PString getTimestamp(uint16_t memSize = 50, bool serialPrint = true, bool sdPrin
   return dataTime;
 }
 
-uint32_t getTime() {
+uint32_t get_time() {
   prepareParseGPS();
   uint16_t milliseconds = GPS.milliseconds;
   uint8_t days = GPS.day;
@@ -166,7 +167,7 @@ uint32_t getTime() {
   }
 
   setTime(hours, minutes, seconds, days, GPS.month, GPS.year + 2000);
-  Serial1 << "# Date (mm/dd/yyyy): " << month() << "/" << day() << "/" << year() << endl;
+  Serial2 << "# Date (mm/dd/yyyy): " << month() << "/" << day() << "/" << year() << endl;
   return ((hours * 3600000) + (minutes * 60000) + (seconds * 1000) + milliseconds);
 }
 
@@ -175,17 +176,9 @@ uint32_t getTime() {
 // BME280
 boolean init_bme() {
   if (!bme.begin()) {
-
-    if (b_useSerial) {
-      Serial << "# BME280 failed to initalize" << endl;
-    }
-    if (b_useXbee) {
-      Serial1 << "# BME280 failed to initalize" << endl;
-    }
-
+    send_message("# BME280 failed to initalize");
     return false;
   }
-
   return true;
 }
 
@@ -193,25 +186,16 @@ void request_bme(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint =
   char buffer[memSize];
   PString dataBME(buffer, sizeof(buffer));
 
-  dataBME << "!!" << DELIMITER << getTimestamp() << DELIMITER << bme.readTemperature() << DELIMITER << bme.readHumidity() << endl;
+  dataBME << "!!" << DELIMITER << get_timestamp() << DELIMITER << bme.readTemperature() << DELIMITER << bme.readHumidity() << endl;
   write_to_locations(serialPrint, sdPrint, xbeePrint, dataBME);
 }
 
 //CCS811
 boolean init_ccs() {
   if (!ccs.begin()) {
-
-    if (b_useSerial) {
-      Serial << "# CCS811 failed to initalize" << endl;
-    }
-    if (b_useXbee) {
-      Serial1 << "# CCS811 failed to initalize" << endl;
-    }
-
+    send_message("# CCS811 failed to initalize");
     return false;
   }
-
-  while (!ccs.available());
   return true;
 }
 
@@ -220,7 +204,7 @@ void request_ccs(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint =
     char buffer[memSize];
     PString dataCCS(buffer, sizeof(buffer));
 
-    dataCCS << "@@" << DELIMITER << getTimestamp()  << DELIMITER << ccs.geteCO2() << DELIMITER << ccs.getTVOC() << endl;
+    dataCCS << "@@" << DELIMITER << get_timestamp()  << DELIMITER << ccs.geteCO2() << DELIMITER << ccs.getTVOC() << endl;
     write_to_locations(serialPrint, sdPrint, xbeePrint, dataCCS);
   }
 }
@@ -228,17 +212,9 @@ void request_ccs(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint =
 //MPL3115A2
 boolean init_baro() {
   if (!baro.begin()) {
-
-    if (b_useSerial) {
-      Serial << "# MPL3115A2 failed to initalize" << endl;
-    }
-    if (b_useXbee) {
-      Serial1 << "# MPL3115A2 failed to initalize" << endl;
-    }
-
+    send_message("# MPL3115A2 failed to initalize");
     return false;
   }
-
   return true;
 }
 
@@ -246,24 +222,16 @@ void request_baro(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint 
   char buffer[memSize];
   PString dataBARO(buffer, sizeof(buffer));
 
-  dataBARO << "##" << DELIMITER  << getTimestamp() << DELIMITER << baro.getPressure() << DELIMITER << baro.getAltitude() << endl;
+  dataBARO << "##" << DELIMITER  << get_timestamp() << DELIMITER << baro.getPressure() << DELIMITER << baro.getAltitude() << endl;
   write_to_locations(serialPrint, sdPrint, xbeePrint, dataBARO);
 }
 
 //BNO055
 boolean init_bno() {
   if (!bno.begin()) {
-
-    if (b_useSerial) {
-      Serial << "# BNO055 failed to initalize" << endl;
-    }
-    if (b_useXbee) {
-      Serial1 << "# BNO055 failed to initalize" << endl;
-    }
-
+    send_message("# BNO055 failed to initalize");
     return false;
   }
-
   bno.setExtCrystalUse(true);
   return true;
 }
@@ -273,7 +241,7 @@ void request_bno(uint16_t memSize = 210, bool serialPrint = true, bool sdPrint =
   PString dataBNO(buffer, sizeof(buffer));
 
   imu::Quaternion quat = bno.getQuat();
-  dataBNO << "%%" << DELIMITER << getTimestamp() << DELIMITER << quat.w() << DELIMITER << quat.x()
+  dataBNO << "%%" << DELIMITER << get_timestamp() << DELIMITER << quat.w() << DELIMITER << quat.x()
           << DELIMITER << quat.y() << DELIMITER << quat.z() << DELIMITER;
 
   imu::Vector<3> mag = bno.getVector(Adafruit_BNO055::VECTOR_MAGNETOMETER);
@@ -297,15 +265,13 @@ void init_gps() {
   GPS.sendCommand(PGCMD_ANTENNA);
 
   delay(1000);
-  // while (!Serial3) {}
-  Serial3.println(PMTK_Q_RELEASE);
+  Serial1.println(PMTK_Q_RELEASE);
 
   b_GPSResult = true;
 }
 
 void prepareParseGPS() {
   char g = GPS.read();
-  //Serial.write(g);
   if (GPS.newNMEAreceived()) {
     if (!GPS.parse(GPS.lastNMEA())) {
       return;
@@ -314,12 +280,12 @@ void prepareParseGPS() {
 }
 
 void request_gps(uint16_t memSize = 200, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true) {
-  if (Serial3.available()) {
+  if (Serial1.available()) {
 
     char buffer[memSize];
     PString dataGPS(buffer, sizeof(buffer));
 
-    dataGPS << "$$" << DELIMITER << getTimestamp() << DELIMITER << GPS.hour << DELIMITER << GPS.minute << DELIMITER << GPS.seconds << DELIMITER
+    dataGPS << "$$" << DELIMITER << get_timestamp() << DELIMITER << GPS.hour << DELIMITER << GPS.minute << DELIMITER << GPS.seconds << DELIMITER
             << GPS.milliseconds << DELIMITER << GPS.day << DELIMITER << GPS.month << DELIMITER
             << GPS.year << DELIMITER << (uint8_t)GPS.fix << DELIMITER << (uint8_t)GPS.fixquality << DELIMITER
             << GPS.latitude << DELIMITER << (int32_t)GPS.lat << DELIMITER << GPS.longitude << DELIMITER
@@ -332,9 +298,9 @@ void request_gps(uint16_t memSize = 200, bool serialPrint = true, bool sdPrint =
 
 //Xbee
 void init_xbee() {
-  Serial1.begin(XBEE_BAUD);
+  Serial2.begin(XBEE_BAUD);
 
-  while (!Serial1) {
+  while (!Serial2) {
     // Wait for the Xbee
   }
 
@@ -360,59 +326,49 @@ void init_sd() {
   if (!logfile) {
     return;
   }
-
-  if (b_useSerial) {
-    Serial << "# Logging to: " << filename << endl;
-  }
-  if (b_useXbee) {
-    Serial1 << "# Logging to: " << filename << endl;
-  }
-
+  send_message("# Logging to: " + String(filename));
+  
   b_sdResult = true;
 }
 
 
 void write_to_locations(bool serialPrint, bool sdPrint, bool xbeePrint, PString data) {
-  if (serialPrint == true) {
+  if (serialPrint) {
     Serial << data;
   }
-
-  if (sdPrint == true) {
+  if (sdPrint) {
     logfile << data;
   }
-
-  if (xbeePrint == true) {
-    Serial1 << data;
+  if (xbeePrint) {
+    Serial2 << data;
   }
 }
 
 /* ---------- Main methods ---------- */
 
 void init_all() {
-
+  
   init_serial();
   init_xbee();
+  
   init_sd();
   init_gps();
   init_sensors();
 
-  verify(b_testResult, 1);
-  verify(b_GPSResult, 1);
-  verify(b_xbeeResult, 1);
-  verify(b_sdResult, 1);
+  send_message("# Sensors init exited with " + String(b_testResult));
+  verify(b_testResult);
 
-  if (b_useSerial) {
-    Serial << "# Sensors init exited with " + String(b_testResult) << endl;
-    Serial << "# Xbee init exited with " + String(b_xbeeResult) << endl;
-    Serial << "# SD init exited with " + String(b_sdResult) << endl;
-    Serial << "# GPS init exited with " + String(b_GPSResult) << endl;
-  }
-  if (b_useXbee) {
-    Serial1 << "# Sensors init exited with " + String(b_testResult) << endl;
-    Serial1 << "# Xbee init exited with " + String( b_xbeeResult) << endl;
-    Serial1 << "# SD init exited with " + String(b_sdResult) << endl;
-    Serial1 << "# GPS init exited with " + String(b_GPSResult) << endl;
-  }
+  send_message("# GPS init exited with " + String(b_GPSResult));
+  verify(b_GPSResult);
+
+  send_message("# Xbee init exited with " + String( b_xbeeResult));
+  verify(b_xbeeResult);
+
+  send_message("# SD init exited with " + String(b_sdResult));
+  verify(b_sdResult);
+
+  init_payload();
+  
 }
 
 void read_all_data() {
@@ -421,7 +377,6 @@ void read_all_data() {
     request_gps();
   }
   
-
   if (b_usebme) {
     request_bme();
   }
@@ -430,12 +385,12 @@ void read_all_data() {
     request_ccs();
   }
 
-  if (b_usebaro) {
-    request_baro();
-  }
-
   if (b_usebno) {
     request_bno();
+  }
+
+  if (b_usebaro) {
+    request_baro();
   }
 
 }
@@ -445,102 +400,62 @@ void setup() {
 }
 
 void runWait() {
-  if (!GPS_SKIP && !GPS.fix) {
+  if (!GPS_SKIP || !GPS.fix) {
 
-    if (b_useSerial) {
-      Serial << "# GPS Finding Fix" << endl;
-    }
-    if (b_useXbee) {
-      Serial1 << "# GPS Finding Fix" << endl;
-    }
+    send_message("# GPS Finding Fix");
 
-    tone(BUZZER_PIN, 1100);
-    delay(2000);
-    noTone(BUZZER_PIN);
-
-
-    while (!GPS.fix) {
+    while (GPS.fix != 1) {
+    
       prepareParseGPS();
 
-      if (Serial1.available()) {
+      tone(BUZZER_PIN, 500);
+      delay(500);
+      noTone(BUZZER_PIN);
+      delay(500);
 
-        if (b_useSerial) {
-          Serial << "req" << endl;
-        }
-        if (b_useXbee) {
-          Serial1 << "req" << endl;
-        }
-
-        c = Serial1.read();
+      send_message("req");
+      delay(2000);
+      
+      if (Serial2.available() > 0) {
+        c = Serial2.read();
         if ( c == '-' ) {
           GPS_SKIP = true;
-
-          if (b_useSerial) {
-            Serial << "# GPS fix skipped" << endl;
-          }
-
-          if (b_useXbee) {
-            Serial1 << "# GPS fix skipped" << endl;
-          }
-
+          send_message("# GPS fix skipped");
           break;
         }
-      } else if (Serial.available()) {
-
-        if (b_useSerial) {
-          Serial << "req" << endl;
-        }
-        if (b_useXbee) {
-          Serial1 << "req" << endl;
-        }
-
+      } 
+      if (Serial.available() > 0) {
         c = Serial.read();
         if ( c == '-' ) {
           GPS_SKIP = true;
-
-          if (b_useSerial) {
-            Serial << "# GPS fix skipped" << endl;
-          }
-
-          if (b_useXbee) {
-            Serial1 << "# GPS fix skipped" << endl;
-          }
-
+          send_message("# GPS fix skipped");
           break;
         }
       }
-
-    }
+    }    
   }
 
-  if (Serial3.available()) {
-    if (b_useSerial) {
-      Serial << "# GPS fix located" << endl;
-    }
-    if (b_useXbee) {
-      Serial1 << "# GPS fix located" << endl;
-    }
+  if (Serial1.available() > 0) {
+    send_message("# GPS fix located");
   }
 
   while (true) {
-    digitalWrite(BUZZER_PIN, HIGH);
-    delay(50);
-    digitalWrite(BUZZER_PIN, LOW);
+    
+    tone(BUZZER_PIN, 1100);
+    delay(500);
+    noTone(BUZZER_PIN);
     delay(500);
 
-    if (b_useSerial) {
-      Serial << "# Awaiting pass char" << endl;
-    }
-    if (b_useXbee) {
-      Serial1 << "# Awaiting pass char" << endl;
-    }
+    send_message("apc");
+    delay(2000);
     
-    if (Serial1.available()) {
-      c = Serial1.read();
+    if (Serial2.available() > 0) {
+      c = Serial2.read();
       if ( c == '+' ) {
         break;
       }
-    } else if (Serial.available()) {
+    }
+    if (Serial.available() > 0) {
       c = Serial.read();
       if ( c == '+' ) {
         break;
@@ -550,109 +465,46 @@ void runWait() {
 }
 
 State nextState(State state) {
+  
   State nextstate = state;
-
-  /*
-    if (Serial.available()) {
-    Serial << "req" << endl;
-    c = Serial.read();
-    } else if (Serial1.available()){
-    Serial1 << "req" << endl;
-    c = Serial1.read();
-    }
-    else {
-    c = '*';
-    }
-  */
 
   switch (state) {
     case WAIT:
-      switch (c) {
-        case '+':
-          nextstate = ARM;
-          break;
-        case '-':
-          GPS_SKIP = false;
-          nextstate = WAIT;
-          break;
-        default:
-          nextstate = WAIT;
-          break;
+      if(c == '+'){
+        nextstate = ARM;
+      }else{
+        nextstate = WAIT;
       }
+      break;
     case ARM:
+      send_message("# ARMED");
       nextstate = READY;
       break;
     case READY:
-      if (c == '-') {
-        GPS_SKIP = false;
-        nextstate = WAIT;
-        break;
-      }
-      else if (c == '+'){
-        if (b_useSerial) {
-          Serial << "# STARTUP RECEIVED" << endl;
-        }
-        if (b_useXbee) {
-          Serial1 << "# STARTUP RECEIVED" << endl;
-        }
-        nextstate = RUN;
-        break;
-      }
-      else if (timeoutINIT.hasTimedOut()) {
-        nextstate = ARM;
-        break;
-      }
-      else {
-        nextstate = READY;
-        break;
-      }
+      send_message("# STARTUP RECEIVED");
+      nextstate = RUN;
+      break;
     case RUN:
-      if (c == '-') {
-        GPS_SKIP = false;
-        nextstate = WAIT;
-        break;
-      } else {
-        nextstate = RUN;
-        break;
-      }
+      nextstate = RUN;
+      break;
   }
   return nextstate;
 }
 
 void loop() {
-
+  
   switch (state) {
     case WAIT:
       runWait();
-      if (b_useSerial) {
-        Serial.println("WAIT");
-      }
-      if (b_useXbee) {
-        Serial1.println("WAIT");
-      }
-
+      send_message("WAIT");
       break;
     case READY:
-      if (b_useSerial) {
-        Serial.println("READY");
-      }
-      if (b_useXbee) {
-        Serial1.println("READY");
-      }
-
+      send_message("READY");
       break;
     case RUN:
-      if (b_useSerial) {
-        Serial.println("RUN");
-      }
-      if (b_useXbee) {
-        Serial1.println("RUN");
-      }
-
+      send_message("RUN");
       read_all_data();
       break;
   }
-
-  Serial.println(state);
   state = nextState(state);
 }

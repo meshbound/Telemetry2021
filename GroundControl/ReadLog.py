@@ -10,20 +10,20 @@ delay_factor = 0.5
 
 path = "./Data/"
 target_log = "{}2020-02-21-dump-(1).csv".format(path)
-temp_path = "{}LogCurrent.json".format(path)
+temp_path = "{}Current.json".format(path)
 
-data_raw_dict = {"!!": "", "@@": "", "##": "", "%%": "", "$$": ""}
+data_raw_dict = {"!!": "0", "@@": "0", "##": "0", "%%": "0", "$$": "0"}
 
-data_clean_dict = {"bme": {"temperature": "", "humidity": ""},
+data_clean_dict = {"bme": {"temperature": "0", "humidity": "0"},
 
-                   "ccs": {"co2": "", "tvoc": ""},
+                   "ccs": {"co2": "0", "tvoc": "0"},
 
-                   "baro": {"pressure": "", "altitude": ""},
+                   "baro": {"pressure": "0", "altitude": "0"},
 
-                   "bno": {"quaternion": {"quat_w": "", "quat_x": "", "quat_y": "", "quat_z": ""},
-                           "mag": {"mag_x": "", "mag_y": "", "mag_z": ""},
-                           "gyroscope": {"gyro_x": "", "gyro_y": "", "gyro_z": ""},
-                           "accelerometer": {"accel_x": "", "accel_y": "", "accel_z": ""}
+                   "bno": {"quaternion": {"quat_w": "0", "quat_x": "0", "quat_y": "0", "quat_z": "0"},
+                           "mag": {"mag_x": "", "mag_y": "0", "mag_z": "0"},
+                           "gyroscope": {"gyro_x": "", "gyro_y": "0", "gyro_z": "0"},
+                           "accelerometer": {"accel_x": "", "accel_y": "0", "accel_z": "0"}
                            },
 
                    "gps": {"time": {"hour": "", "min": "", "sec": "", "milli": "", "day": "", "month": "", "year": ""},
