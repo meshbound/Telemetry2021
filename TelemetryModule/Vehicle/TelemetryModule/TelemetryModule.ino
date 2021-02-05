@@ -38,7 +38,8 @@ Adafruit_GPS GPS(&Serial2);
 
 /* ---------- Variables ---------- */
 
-bool b_useSerial = true; bool b_useXbee = false;
+bool b_useSerial = true; bool b_useXbee = false; bool b_usePayload = false;
+
 bool b_testResult = false; bool b_xbeeResult = false; bool b_sdResult = false; bool b_GPSResult = false;
 bool b_usebme = false; bool b_useccs = false; bool b_usebaro = false; bool b_usebno = false;
 
@@ -57,7 +58,7 @@ bool GPS_SKIP = false;
 const uint16_t ADAGPS_BAUD = 9600;
 
 //Logfile
-File logfile;
+char filename[] = "FLIGHT00.CSV";
 
 //Buffer
 #define MAX_BUFFER 256
@@ -92,7 +93,6 @@ void init_payload(){
 
 void init_serial() {
   Serial.begin(9600);
-  b_useSerial = true;
 }
 
 void verify(bool value) {
@@ -127,7 +127,7 @@ void init_time() {
 
 }
 
-PString get_timestamp(uint16_t memSize = 50, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true) {
+PString get_timestamp(uint16_t memSize = 50) {
   uint32_t elapsedTime = millis() - START_TIME;
   uint32_t inputMillis = elapsedTime + START_TIME_GPS;
 
@@ -182,12 +182,12 @@ boolean init_bme() {
   return true;
 }
 
-void request_bme(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true) {
+void request_bme(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint = true, bool payloadPrint = false, bool xbeePrint = true) {
   char buffer[memSize];
   PString dataBME(buffer, sizeof(buffer));
 
   dataBME << "!!" << DELIMITER << get_timestamp() << DELIMITER << bme.readTemperature() << DELIMITER << bme.readHumidity() << endl;
-  write_to_locations(serialPrint, sdPrint, xbeePrint, dataBME);
+  write_to_locations(serialPrint, sdPrint, xbeePrint, payloadPrint, dataBME);
 }
 
 //CCS811
@@ -199,13 +199,13 @@ boolean init_ccs() {
   return true;
 }
 
-void request_ccs(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true) {
+void request_ccs(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint = true, bool payloadPrint = false, bool xbeePrint = true) {
   if (ccs.available()) {
     char buffer[memSize];
     PString dataCCS(buffer, sizeof(buffer));
 
     dataCCS << "@@" << DELIMITER << get_timestamp()  << DELIMITER << ccs.geteCO2() << DELIMITER << ccs.getTVOC() << endl;
-    write_to_locations(serialPrint, sdPrint, xbeePrint, dataCCS);
+    write_to_locations(serialPrint, sdPrint, xbeePrint, payloadPrint, dataCCS);
   }
 }
 
@@ -218,12 +218,12 @@ boolean init_baro() {
   return true;
 }
 
-void request_baro(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true) {
+void request_baro(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint = true, bool payloadPrint = true, bool xbeePrint = true) {
   char buffer[memSize];
   PString dataBARO(buffer, sizeof(buffer));
 
   dataBARO << "##" << DELIMITER  << get_timestamp() << DELIMITER << baro.getPressure() << DELIMITER << baro.getAltitude() << endl;
-  write_to_locations(serialPrint, sdPrint, xbeePrint, dataBARO);
+  write_to_locations(serialPrint, sdPrint, xbeePrint, payloadPrint, dataBARO);
 }
 
 //BNO055
@@ -236,7 +236,7 @@ boolean init_bno() {
   return true;
 }
 
-void request_bno(uint16_t memSize = 210, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true) {
+void request_bno(uint16_t memSize = 210, bool serialPrint = true, bool sdPrint = true, bool payloadPrint = true, bool xbeePrint = true) {
   char buffer[memSize];
   PString dataBNO(buffer, sizeof(buffer));
 
@@ -253,7 +253,7 @@ void request_bno(uint16_t memSize = 210, bool serialPrint = true, bool sdPrint =
   imu::Vector<3> accel = bno.getVector(Adafruit_BNO055::VECTOR_ACCELEROMETER);
   dataBNO << accel.x() << DELIMITER << accel.y() << DELIMITER << accel.z() << endl;
 
-  write_to_locations(serialPrint, sdPrint, xbeePrint, dataBNO);
+  write_to_locations(serialPrint, sdPrint, xbeePrint, payloadPrint, dataBNO);
 }
 
 //GPS
@@ -279,7 +279,7 @@ void prepareParseGPS() {
   }
 }
 
-void request_gps(uint16_t memSize = 200, bool serialPrint = true, bool sdPrint = true, bool xbeePrint = true) {
+void request_gps(uint16_t memSize = 200, bool serialPrint = true, bool sdPrint = true, bool payloadPrint = false, bool xbeePrint = true) {
   if (Serial1.available()) {
 
     char buffer[memSize];
@@ -292,7 +292,7 @@ void request_gps(uint16_t memSize = 200, bool serialPrint = true, bool sdPrint =
             << (int32_t)GPS.lon << DELIMITER << GPS.speed << DELIMITER << GPS.angle << DELIMITER
             << GPS.altitude << DELIMITER << GPS.satellites << endl;
  
-    write_to_locations(serialPrint, sdPrint, xbeePrint, dataGPS);
+    write_to_locations(serialPrint, sdPrint, xbeePrint, payloadPrint, dataGPS);
   }
 }
 
@@ -312,44 +312,57 @@ void init_sd() {
   if (!SD.begin(SELECT_SLVE)) {
     return;
   }
-
-  char filename[] = "FLIGHT00.CSV";
+  
   for (uint8_t i = 0; i < 100; i++) {
     filename[6] = i / 10 + '0';
     filename[7] = i % 10 + '0';
     if (!SD.exists(filename)) {
-      logfile = SD.open(filename, FILE_WRITE);
       break;
     }
   }
 
+  File logfile = SD.open(filename, FILE_WRITE);
   if (!logfile) {
     return;
   }
+  logfile.close();
+  
   send_message("# Logging to: " + String(filename));
   
   b_sdResult = true;
 }
 
 
-void write_to_locations(bool serialPrint, bool sdPrint, bool xbeePrint, PString data) {
-  if (serialPrint) {
+void write_to_locations(bool serialPrint, bool sdPrint, bool xbeePrint, bool payloadPrint, PString data) {
+  if (serialPrint && b_useSerial) {
     Serial << data;
   }
-  if (sdPrint) {
+  if (sdPrint && b_sdResult) {
+    File logfile = SD.open(filename, FILE_WRITE);
     logfile << data;
+    logfile.close();
   }
-  if (xbeePrint) {
+  if (xbeePrint && b_useXbee) {
     Serial2 << data;
+  }
+  if(payloadPrint && b_usePayload){
+    Serial3 << data;
   }
 }
 
 /* ---------- Main methods ---------- */
 
 void init_all() {
-  
-  init_serial();
-  init_xbee();
+
+  if(b_useSerial){
+    init_serial();
+  }
+  if(b_useXbee){
+    init_xbee();
+  }
+  if(b_usePayload){
+    init_payload();
+  }
   
   init_sd();
   init_gps();
@@ -366,8 +379,6 @@ void init_all() {
 
   send_message("# SD init exited with " + String(b_sdResult));
   verify(b_sdResult);
-
-  init_payload();
   
 }
 
