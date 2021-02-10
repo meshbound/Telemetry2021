@@ -9,7 +9,7 @@ from GroundControl.visualizer import *
 SERIAL_PORT = "COM7"
 BAUD_RATE = 9600
 
-write_dump = False;
+write_dump = True;
 
 # keeps track of receiving data
 received = 0

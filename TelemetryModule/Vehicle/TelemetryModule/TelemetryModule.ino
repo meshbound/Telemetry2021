@@ -23,10 +23,10 @@ Adafruit_BME280 bme;
 Adafruit_CCS811 ccs;
 
 // MPL3115A2
-Adafruit_MPL3115A2 baro = Adafruit_MPL3115A2();
+Adafruit_MPL3115A2 baro;
 
 // BNO055
-Adafruit_BNO055 bno = Adafruit_BNO055();
+Adafruit_BNO055 bno;
 
 // SD Card
 const uint8_t SELECT_SLVE = 10;
@@ -38,7 +38,7 @@ Adafruit_GPS GPS(&Serial2);
 
 /* ---------- Variables ---------- */
 
-bool b_useSerial = true; bool b_useXbee = false; bool b_usePayload = false;
+bool b_useSerial = true; bool b_useXbee = false; bool b_usePayload = true;
 
 bool b_testResult = false; bool b_xbeeResult = false; bool b_sdResult = false; bool b_GPSResult = false;
 bool b_usebme = false; bool b_useccs = false; bool b_usebaro = false; bool b_usebno = false;
@@ -46,7 +46,10 @@ bool b_usebme = false; bool b_useccs = false; bool b_usebaro = false; bool b_use
 char c;
 
 // Buzzer
-const uint8_t BUZZER_PIN = 6;
+const int8_t BUZZER_PIN = 6;
+
+// Buzzer
+const int8_t FLASHER_PIN = 5;
 
 //Xbee
 const uint32_t XBEE_BAUD = 9600;
@@ -69,17 +72,17 @@ uint32_t START_TIME, START_TIME_GPS;
 
 //States
 enum State {WAIT, ARM, READY, RUN};
-State state = WAIT;
+State state = RUN;
 
 
 /* ---------- Debug methods ---------- */
 
 bool init_sensors() {
 
+  b_usebno = init_bno();
   b_usebme = init_bme();
   b_useccs = init_ccs();
   b_usebaro = init_baro();
-  b_usebno = init_bno();
 
   bool test = b_usebme && b_useccs && b_usebaro && b_usebno;
   b_testResult = test;
@@ -175,9 +178,14 @@ uint32_t get_time() {
 
 // BME280
 boolean init_bme() {
-  if (!bme.begin()) {
-    send_message("# BME280 failed to initalize");
-    return false;
+  int total = 0;
+  while(!bme.begin()){
+    total++;
+    if(total > 3){
+      send_message("# BME280 failed to initalize");
+      return false;
+    }
+    delay(1);
   }
   return true;
 }
@@ -192,9 +200,14 @@ void request_bme(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint =
 
 //CCS811
 boolean init_ccs() {
-  if (!ccs.begin()) {
-    send_message("# CCS811 failed to initalize");
-    return false;
+  int total = 0;
+  while(!ccs.begin()){
+    total++;
+    if(total > 3){
+      send_message("# CCS811 failed to initalize");
+      return false;
+    }
+    delay(1);
   }
   return true;
 }
@@ -211,9 +224,14 @@ void request_ccs(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint =
 
 //MPL3115A2
 boolean init_baro() {
-  if (!baro.begin()) {
-    send_message("# MPL3115A2 failed to initalize");
-    return false;
+  int total = 0;
+  while(!baro.begin()){
+    total++;
+    if(total > 3){
+      send_message("# MPL3115A2 failed to initalize");
+      return false;
+    }
+    delay(1);
   }
   return true;
 }
@@ -221,16 +239,21 @@ boolean init_baro() {
 void request_baro(uint16_t memSize = 100, bool serialPrint = true, bool sdPrint = true, bool payloadPrint = true, bool xbeePrint = true) {
   char buffer[memSize];
   PString dataBARO(buffer, sizeof(buffer));
-
+  
   dataBARO << "##" << DELIMITER  << get_timestamp() << DELIMITER << baro.getPressure() << DELIMITER << baro.getAltitude() << endl;
   write_to_locations(serialPrint, sdPrint, xbeePrint, payloadPrint, dataBARO);
 }
 
 //BNO055
 boolean init_bno() {
-  if (!bno.begin()) {
-    send_message("# BNO055 failed to initalize");
-    return false;
+  int total = 0;
+  while(!bno.begin()){
+    total++;
+    if(total > 3){
+      send_message("# BNO055 failed to initalize");
+      return false;
+    }
+    delay(1);
   }
   bno.setExtCrystalUse(true);
   return true;
@@ -473,6 +496,8 @@ void runWait() {
       }
     }
   }
+  digitalWrite(FLASHER_PIN, HIGH);
+  
 }
 
 State nextState(State state) {

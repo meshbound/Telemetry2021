@@ -30,7 +30,10 @@ void init_xbee() {
 /* ---------- Main methods ---------- */
 
 void read_out(){
-  
+
+    if(Serial1.available() > 0){
+        Serial << Serial1.read() << endl;
+    }
 }
 
 
