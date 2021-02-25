@@ -125,8 +125,6 @@ def import_payload():
 
 def send_data_payload():
 
-    print('test')
-
     data = open(settings['data_path'], "r")
 
     while not kill_threads:
