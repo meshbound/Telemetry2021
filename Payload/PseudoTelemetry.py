@@ -143,8 +143,7 @@ def send_data_payload():
 
 def run_payload():
 
-    if kill_threads:
-        payload_module.payload_behavior()
+    payload_module.payload_behavior()
 
 
 if __name__ == '__main__':
