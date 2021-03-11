@@ -2,10 +2,6 @@
 
 bool b_useSerial; bool b_useXbee;
 
-//Xbee
-const uint32_t XBEE_BAUD = 9600;
-
-
 /* ---------- Init methods ---------- */
 
 void init_serial(){
@@ -16,7 +12,7 @@ void init_serial(){
 
 //Xbee
 void init_xbee() {
-  Serial1.begin(XBEE_BAUD);
+  Serial1.begin(9600);
 
   while (!Serial1) {
     // Wait for the Xbee
@@ -30,10 +26,13 @@ void init_xbee() {
 /* ---------- Main methods ---------- */
 
 void read_out(){
-
-    if(Serial1.available() > 0){
-        Serial << Serial1.read() << endl;
-    }
+  
+  if(Serial1.available()){
+     delay(100);  //delay to allow byte to arrive in input buffer
+     Serial1.write('+');
+     Serial.println(Serial1.read());
+     Serial.print("test");
+  }
 }
 
 
@@ -41,10 +40,8 @@ void init_all() {
   
   init_serial();
   init_xbee();
-
-  if(b_useSerial){
-    Serial << "# Xbee init exited with " + String(b_xbeeResult) << endl;
-  }
+  
+  Serial.println("# Xbee successfully initalized");
 }
 
 void setup() {

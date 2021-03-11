@@ -32,13 +32,13 @@ Adafruit_BNO055 bno;
 const uint8_t SELECT_SLVE = 10;
 
 // GPS
-Adafruit_GPS GPS(&Serial2);
+Adafruit_GPS GPS(&Serial1);
 
 // Payload UART Serial3
 
 /* ---------- Variables ---------- */
 
-bool b_useSerial = true; bool b_useXbee = false; bool b_usePayload = true;
+bool b_useSerial = false; bool b_useXbee = false; bool b_usePayload = true;
 
 bool b_testResult = false; bool b_xbeeResult = false; bool b_sdResult = false; bool b_GPSResult = false;
 bool b_usebme = false; bool b_useccs = false; bool b_usebaro = false; bool b_usebno = false;
@@ -65,14 +65,13 @@ char filename[] = "FLIGHT00.CSV";
 
 //Buffer
 #define MAX_BUFFER 256
-uint8_t decoded_buffer[MAX_BUFFER];
 
 //Timers
 uint32_t START_TIME, START_TIME_GPS;
 
 //States
 enum State {WAIT, ARM, READY, RUN};
-State state = RUN;
+State state = ARM;
 
 
 /* ---------- Debug methods ---------- */
@@ -170,7 +169,6 @@ uint32_t get_time() {
   }
 
   setTime(hours, minutes, seconds, days, GPS.month, GPS.year + 2000);
-  Serial2 << "# Date (mm/dd/yyyy): " << month() << "/" << day() << "/" << year() << endl;
   return ((hours * 3600000) + (minutes * 60000) + (seconds * 1000) + milliseconds);
 }
 
@@ -323,11 +321,7 @@ void request_gps(uint16_t memSize = 200, bool serialPrint = true, bool sdPrint =
 void init_xbee() {
   Serial2.begin(XBEE_BAUD);
 
-  while (!Serial2) {
-    // Wait for the Xbee
-  }
-
-  b_useXbee = true;
+  b_xbeeResult = true;
 }
 
 //SD
@@ -365,7 +359,7 @@ void write_to_locations(bool serialPrint, bool sdPrint, bool xbeePrint, bool pay
     logfile << data;
     logfile.close();
   }
-  if (xbeePrint && b_useXbee) {
+  if (xbeePrint && b_xbeeResult) {
     Serial2 << data;
   }
   if(payloadPrint && b_usePayload){
@@ -442,12 +436,13 @@ void runWait() {
     
       prepareParseGPS();
 
+      delay(500);
       tone(BUZZER_PIN, 500);
       delay(500);
       noTone(BUZZER_PIN);
-      delay(500);
 
       send_message("req");
+      Serial2.write("test");
       delay(2000);
       
       if (Serial2.available() > 0) {
@@ -474,11 +469,11 @@ void runWait() {
   }
 
   while (true) {
-    
+
+    delay(500);
     tone(BUZZER_PIN, 1100);
     delay(500);
     noTone(BUZZER_PIN);
-    delay(500);
 
     send_message("apc");
     delay(2000);
