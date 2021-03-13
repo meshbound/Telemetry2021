@@ -1,10 +1,17 @@
+#!/usr/bin/env python
 import time
+import serial
+import struct
+import codecs
+
 
 class Listener():
 
+	# default settings are for a launch to be detected at 120ft by altimeters
+	# a timeout is also used should anything fail so we're guaranteed to get data
     def __init__(self, launch_alt_ft=120, timeout_s=240):
 
-        self.launch_alt = launch_alt_ft/3.281
+        self.launch_alt = launch_alt_ft / 3.281
         self.launch_timeout = timeout_s
 
         self.pnut_init_alt = None
@@ -74,3 +81,40 @@ class Listener():
             points += 1
 
         return (points >= 2) or (time.time() - self.time_begin >= self.launch_timeout)
+
+
+def serial_listen():
+
+	# Telemetry Teensy serial connection, operating on PL011 (UART0, ttyAMA0)
+	serT = serial.Serial(
+		port='/dev/ttyAMA0',
+		baudrate=9600,
+		parity=serial.PARITY_NONE,
+		stopbits=serial.STOPBITS_ONE,
+		bytesize=serial.EIGHTBITS,
+		timeout=1,
+	)
+
+	# Payload Pnut serial connection, operating on miniUART (UART1, ttyS0)
+	serP = serial.Serial(
+		port='/dev/ttyS0',
+		baudrate=9600,
+		parity=serial.PARITY_NONE,
+		stopbits=serial.STOPBITS_ONE,
+		bytesize=serial.EIGHTBITS,
+		timeout=1
+	)
+
+	listener = Listener()
+
+	while True:
+		x = serT.readline(5)
+		print(x)
+		listener.parse_telemetry(x)
+
+		y = serP.readline(5)
+		print(y)
+		listener.parse_pnut(y)
+
+		if listener.launched():
+			return
