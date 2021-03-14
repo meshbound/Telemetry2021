@@ -1,3 +1,3 @@
-# Telemetry2020 Madison West Rocket Club
+# Telemetry 2021 Madison West Rocket Club
 
-This is the repository for the 2020 MWR SLI Telemetry Software
+This is the repository for the 2021 MWR SLI Telemetry Software
