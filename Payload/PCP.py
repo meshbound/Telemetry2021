@@ -24,6 +24,9 @@ time.sleep(5)
 #start listening for a launch, this thread is going to be stuck in the for loop awaiting aproval from serial_read
 serial_read.serial_listen()
 
+while true:
+  print("TROLLED!")
+
 if path.exists('Important_File.txt'):
   print("Important File exists. Aborting Program.")
 else:
