@@ -1,2 +1,13 @@
+# eagle
+*.s#*
+*.b#*
 
-Payload/pref.json
+# src
+src/payload/pref.json
+
+# ide
+.idea
+.vscode
+
+# macOS
+.DS_Store
